@@ -133,7 +133,7 @@ public struct Settings: Codable, Equatable {
     private static let defaultCandidateSelectMode: CandidateSelectMode = .expandDownward
     private static let defaultSymbolShape: SymbolShape = .smart
     private static let defaultSmartSymbolShapeDefault: SymbolShape = .full
-    private static let defaultSpaceAction: SpaceAction = .insertText
+    private static let defaultSpaceAction: SpaceAction = .insertCandidate
     private static let defaultToneInputMode: ToneInputMode = .longPress
     private static let defaultRimeSettings: RimeSettings = RimeSettings()
     private static let defaultEnglishLocale: EnglishLocale = .us
@@ -146,7 +146,7 @@ public struct Settings: Codable, Equatable {
     private static let defaultEnableSystemLexicon: Bool = false
     private static let defaultPressSymbolKeysEnabled: Bool = true
     private static let defaultEnableHKCorrection: Bool = true
-    private static let defaultFullWidthSpaceMode: FullWidthSpaceMode = .off
+    private static let defaultFullWidthSpaceMode: FullWidthSpaceMode = .shift
     private static let defaultEnablePredictiveText: Bool = true
     private static let defaultPredictiveTextOffensiveWord: Bool = false
     private static let defaultFullPadCandidateBar: Bool = true
