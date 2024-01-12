@@ -15,15 +15,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         set {
             Settings.save(newValue)
             
-            if let inputCell = self.tableView.cellForRow(at: [1, 0]) as? InputTableViewCell {
+            if let inputCell = self.tableView.cellForRow(at: [2, 0]) as? InputTableViewCell {
                 inputCell.hideKeyboard()
             }
         }
     }
     var sections: [Section] = Settings.buildSections()
     var aboutCells: [(title: String, image: UIImage, action: () -> ())]!
-    
-    var lastSection: Int { Keyboard.isEnabled ? sections.count + 2 : 1 }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,14 +69,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.reloadData()
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int { lastSection + 1 }
+    func numberOfSections(in tableView: UITableView) -> Int { Keyboard.isEnabled ? sections.count + 3 : 2 }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case lastSection: return aboutCells.count
-        case 0, 1: return 1
+        case 0: return 1
+        case 1: return aboutCells.count
+        case 2: return 1
         default:
-            let sectionId = section - 2
+            let sectionId = section - 3
             guard 0 <= sectionId && sectionId < sections.count else { return 0 }
             return sections[sectionId].options.count
         }
@@ -86,10 +85,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case lastSection: return LocalizedStrings.other
         case 0: return LocalizedStrings.installCantoboard
-        case 1: return LocalizedStrings.testKeyboard
-        default: return sections[section - 2].header
+        case 1: return nil
+        case 2: return LocalizedStrings.testKeyboard
+        default: return sections[section - 3].header
         }
     }
     
@@ -107,20 +106,20 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
-        case lastSection: return UITableViewCell(title: aboutCells[indexPath.row].title, image: aboutCells[indexPath.row].image)
         case 0: return UITableViewCell(tintedTitle: LocalizedStrings.installCantoboard_settings, image: CellImage.settings)
-        case 1: return InputTableViewCell(tableView: tableView)
-        default: return sections[indexPath.section - 2].options[indexPath.row].dequeueCell(with: self)
+        case 1: return UITableViewCell(title: aboutCells[indexPath.row].title, image: aboutCells[indexPath.row].image)
+        case 2: return InputTableViewCell(tableView: tableView)
+        default: return sections[indexPath.section - 3].options[indexPath.row].dequeueCell(with: self)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
-        case lastSection: aboutCells[indexPath.row].action()
         case 0: UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-        case 1: (tableView.cellForRow(at: indexPath) as? InputTableViewCell)?.showKeyboard()
-        default: showDescription(of: sections[indexPath.section - 2].options[indexPath.row])
+        case 1: aboutCells[indexPath.row].action()
+        case 2: (tableView.cellForRow(at: indexPath) as? InputTableViewCell)?.showKeyboard()
+        default: showDescription(of: sections[indexPath.section - 3].options[indexPath.row])
         }
     }
     
