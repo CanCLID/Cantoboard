@@ -116,6 +116,7 @@ private class Segment<T: Equatable>: Option {
     func dequeueCell(with controller: MainViewController) -> UITableViewCell {
         self.controller = controller
         control = UISegmentedControl(items: options.map { $0.key })
+        control.setTitleTextAttributes(String.HKAttribute, for: .normal)
         control.selectedSegmentIndex = options.firstIndex(where: { $1 == value })!
         control.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         return makeCell(with: control)
@@ -162,7 +163,7 @@ private class IntStepper<T: BinaryInteger>: Option {
         control.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         
         valueLabel = UILabel()
-        valueLabel.text = String(value)
+        valueLabel.attributedText = String(value).toHKAttributedString
         
         let stackView = UIStackView(arrangedSubviews: [valueLabel, control])
         stackView.spacing = 5
@@ -172,7 +173,7 @@ private class IntStepper<T: BinaryInteger>: Option {
     
     @objc func updateSettings() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        valueLabel.text = String(T(control.value))
+        valueLabel.attributedText = String(T(control.value)).toHKAttributedString
         value = T(control.value)
         controller.settings[keyPath: key] = value
         controller.view.endEditing(true)

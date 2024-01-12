@@ -499,7 +499,7 @@ open class KeyboardViewController: UIInputViewController {
         let logView = UITextView()
         logView.frame = view.bounds
         logView.isEditable = false
-        logView.text = logs.joined()
+        logView.attributedText = logs.joined().toHKAttributedString
         
         view.addSubview(logView)
         self.logView = logView

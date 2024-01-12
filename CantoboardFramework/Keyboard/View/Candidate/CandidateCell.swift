@@ -101,7 +101,7 @@ class CandidateCell: UICollectionViewCell {
     }
     
     func free() {
-        label?.text = nil
+        label?.attributedText = nil
         label?.removeFromSuperview()
         label = nil
         

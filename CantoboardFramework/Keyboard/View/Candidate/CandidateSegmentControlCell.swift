@@ -34,7 +34,7 @@ class CandidateSegmentControlCell: UICollectionViewCell {
         guard let segmentControl = segmentedControl, segmentControl.numberOfSegments != groupByModes.count else { return }
         
         let font: UIFont = .preferredFont(forTextStyle: .subheadline)
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
+        segmentControl.setTitleTextAttributes(String.HKAttributed(withFont: font), for: .normal)
         
         UIView.performWithoutAnimation {
             segmentControl.removeAllSegments()

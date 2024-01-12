@@ -274,7 +274,7 @@ class CandidatePaneView: UIControl {
         
         let isKeyboardEnabled = keyboardState.enableState == .enabled
         
-        inputModeButton.setTitle(title, for: .normal)
+        inputModeButton.setAttributedTitle(title?.toHKAttributedString, for: .normal)
         inputModeButton.shouldShowMenuIndicator = shouldShowMiniIndicator && mode == .row
         inputModeButton.isEnabled = isKeyboardEnabled
 
@@ -291,7 +291,7 @@ class CandidatePaneView: UIControl {
         scrollDownButton.isEnabled = isKeyboardEnabled && collectionView.contentOffset.y < collectionView.contentSize.height - collectionView.frame.height - 0.25 * rowHeight
 
         let charFormText = SessionState.main.lastCharForm.caption
-        charFormButton.setTitle(charFormText, for: .normal)
+        charFormButton.setAttributedTitle(charFormText.toHKAttributedString, for: .normal)
         charFormButton.isEnabled = keyboardState.enableState == .enabled
         
         if mode == .table {
