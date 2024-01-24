@@ -288,10 +288,6 @@ public struct Settings: Codable, Equatable {
     
     public static func save(_ settings: Settings) {
         _cached = settings
-        guard hasFullAccess else {
-            DDLogInfo("Skip updating UserDefaults as we don't have full access.")
-            return
-        }
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(settings) {
             userDefaults.set(encoded, forKey: settingsKeyName)
@@ -320,8 +316,6 @@ public struct Settings: Codable, Equatable {
             DDLogInfo("Failed to save \(cached) to \(prevSettingsKeyName)")
         }
     }
-    
-    public static var hasFullAccess = true
     
     private static var userDefaults: UserDefaults = initUserDefaults()
     

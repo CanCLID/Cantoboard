@@ -225,7 +225,6 @@ open class KeyboardViewController: UIInputViewController {
         
         super.viewDidLoad()
         
-        Settings.hasFullAccess = hasFullAccess
         view.translatesAutoresizingMaskIntoConstraints = false
         createKeyboardViewPlaceholder()
         
