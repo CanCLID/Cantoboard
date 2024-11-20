@@ -325,11 +325,6 @@ class KeyboardView: UIView, BaseKeyboardView {
                 }
             }
             
-            if isInCangjieMode && !isInEnglishMode && isLetterKey {
-                let keyCapHints = KeyCapHints(leftHint: leftHint, rightHint: isInMixedMode ? c : rightHint, bottomHint: bottomHint)
-                return .cangjie(keyChar, keyCapHints, childrenKeyCaps, Settings.cached.cangjieKeyCapMode)
-            }
-            
             if !isInEnglishMode && state.activeSchema.supportCantoneseTonalInput {
                 if isInLongPressMode {
                     switch c {
@@ -393,6 +388,9 @@ class KeyboardView: UIView, BaseKeyboardView {
             }
             
             let keyCapHints = leftHint == nil && rightHint == nil && bottomHint == nil ? nil : KeyCapHints(leftHint: leftHint, rightHint: rightHint, bottomHint: bottomHint)
+            if isInCangjieMode && !isInEnglishMode && isLetterKey {
+                return .cangjie(keyChar, keyCapHints, childrenKeyCaps, Settings.cached.cangjieKeyCapMode)
+            }
             return .character(keyChar, keyCapHints, childrenKeyCaps)
         case .shift: return .shift(shiftState)
         case .keyboardType where groupId == 2 && state.keyboardIdiom.isPad:
