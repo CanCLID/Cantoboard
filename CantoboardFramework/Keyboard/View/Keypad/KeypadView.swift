@@ -27,7 +27,7 @@ class KeypadView: UIView, BaseKeyboardView {
         [ KeypadButtonProps(keyCap: .keyboardType(.numeric)) ],
         [ KeypadButtonProps(keyCap: .toggleInputMode(.english, nil, true)) ],
         [ KeypadButtonProps(keyCap: .keyboardType(.symbolic)) ],
-        [ KeypadButtonProps(keyCap: .keyboardType(.emojis)) ],
+        [ KeypadButtonProps(keyCap: .nextKeyboard) ],
     ]
     
     private let rightButtonStrokeProps: [[KeypadButtonProps]] = [
@@ -153,6 +153,7 @@ class KeypadView: UIView, BaseKeyboardView {
                 case ".", "。": keyCap = isFullWidth ? "。" : "."
                 case "?", "？": keyCap = isFullWidth ? "？" : "?"
                 case "!", "！": keyCap = isFullWidth ? "！" : "!"
+                case .nextKeyboard where !state.needsInputModeSwitchKey: keyCap = .keyboardType(.emojis)
                 default: ()
                 }
                 
