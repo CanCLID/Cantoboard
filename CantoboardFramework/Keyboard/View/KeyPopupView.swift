@@ -22,7 +22,6 @@ class KeyPopupView: UIView {
     }
     
     private(set) var keyCaps: [KeyCap] = []
-    private var actions: [KeyboardAction] = []
     private var shapeLayer: CAShapeLayer!
     private var keyWidth: CGFloat = 0
     private var direction: PopupDirection = .middle
@@ -34,8 +33,8 @@ class KeyPopupView: UIView {
     private var highlightedLabelIndex: Int?
     private var layoutConstants: Reference<LayoutConstants>
     
-    var selectedAction: KeyboardAction {
-        actions[safe: highlightedLabelIndex ?? 0] ?? .none
+    var selectedKeyCap: KeyCap {
+        keyCaps[safe: highlightedLabelIndex ?? 0] ?? .none
     }
     
     // These clearance values are used to keep the popup view within keyboard view boundary.
@@ -69,21 +68,21 @@ class KeyPopupView: UIView {
         return label
     }
     
-    private func setupLabels(_ actions: [KeyboardAction]) {
-        while labels.count < actions.count {
+    private func setupLabels() {
+        while labels.count < keyCaps.count {
             let label = createLabel()
             labels.append(label)
             addSubview(label)
         }
         
-        while labels.count > actions.count {
+        while labels.count > keyCaps.count {
             labels.remove(at: labels.count - 1).removeFromSuperview()
         }
         
         hintLayers.forEach { $0.removeFromSuperlayer() }
         hintLayers = []
         
-        for i in 0..<actions.count {
+        for i in 0..<keyCaps.count {
             let label = labels[i]
             let keyCap = keyCaps[i]
             label.tag = i
@@ -114,11 +113,10 @@ class KeyPopupView: UIView {
             self.keyCaps = keyCaps.reversed()
             self.defaultKeyCapIndex = keyCaps.count - 1 - defaultKeyCapIndex
         }
-        self.actions = self.keyCaps.map { $0.action }
         
-        setupLabels(actions)
+        setupLabels()
         
-        if actions.count > 1 {
+        if keyCaps.count > 1 {
             highlightedLabelIndex = self.defaultKeyCapIndex
             labels[self.defaultKeyCapIndex].backgroundColor = .systemBlue
         }
@@ -139,8 +137,8 @@ class KeyPopupView: UIView {
         let keyboardWidth = layoutConstants.keyboardWidth
         
         var buttonSize: CGSize
-        if actions.count < 10 {
-            let bodyInsets = actions.count >= 8 ? KeyPopupView.bodyInsetsThin : KeyPopupView.bodyInsets
+        if keyCaps.count < 10 {
+            let bodyInsets = keyCaps.count >= 8 ? KeyPopupView.bodyInsetsThin : KeyPopupView.bodyInsets
             buttonSize = CGSize(
                 width: layoutConstants.idiom.isPad ? keyWidth : bodyInsets.wrap(width: keyWidth),
                 height: keyHeight)
@@ -148,11 +146,11 @@ class KeyPopupView: UIView {
             // For letter key A, adjust the width a bit so children keys don't go out of screen.
             let widthAdjustment = defaultKeyCapIndex == 0 ? parentKeyView.frame.minX : 0
             buttonSize = CGSize(
-                width: layoutConstants.idiom.isPad ? keyWidth : (keyboardWidth - widthAdjustment) / CGFloat(actions.count),
+                width: layoutConstants.idiom.isPad ? keyWidth : (keyboardWidth - widthAdjustment) / CGFloat(keyCaps.count),
                 height: keyHeight)
         }
         
-        var bodySize = KeyPopupView.bodyInsets.wrap(size: buttonSize.multiplyWidth(byTimes: max(actions.count, 1)))
+        var bodySize = KeyPopupView.bodyInsets.wrap(size: buttonSize.multiplyWidth(byTimes: max(keyCaps.count, 1)))
         var contentSize = bodySize.extend(height: linkHeight)
         
         if let heightClearance = heightClearance, contentSize.height > heightClearance {
@@ -167,7 +165,7 @@ class KeyPopupView: UIView {
     }
     
     private func layoutLabels(buttonSize: CGSize) {
-        for i in 0..<actions.count {
+        for i in 0..<keyCaps.count {
             let label = labels[i]
             let x = KeyPopupView.bodyInsets.left + buttonSize.width * CGFloat(i)
             
@@ -236,7 +234,7 @@ class KeyPopupView: UIView {
         return nil
     }
     
-    func updateSelectedAction(_ touch: UITouch) {
+    func updateSelectedKeyCap(_ touch: UITouch) {
         guard labels.count > 1 else { return }
         let point = touch.location(in: self)
         for i in 0..<labels.count {
