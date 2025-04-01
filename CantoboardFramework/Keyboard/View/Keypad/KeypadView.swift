@@ -147,6 +147,7 @@ class KeypadView: UIView, BaseKeyboardView {
                 } else {
                     button = KeypadButton(layoutConstants: layoutConstants)
                     button.titleLabel?.adjustsFontSizeToFitWidth = true
+                    button.shouldDisablePreview = true
                     addSubview(button)
                 }
                 
