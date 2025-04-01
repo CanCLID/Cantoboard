@@ -70,12 +70,12 @@ extension StatusMenuHandler where Self: BaseKeyboardView {
         let cjSchema = Settings.cached.cangjieVersion.toRimeCJSchema
         let quickSchema = Settings.cached.cangjieVersion.toRimeQuickSchema
         let menuRows: [[KeyCap]] = state.keyboardIdiom == .phone && layoutConstants.ref.isPortrait ? [
-            [ .changeSchema(.jyutping), .toggleInputMode(.english, nil, false) ],
+            [ .changeSchema(.jyutping), .toggleInputMode(.english, nil, nil, false) ],
             [ .changeSchema(.yale), .changeSchema(.jyutping10keys) ],
             [ .changeSchema(cjSchema), .changeSchema(quickSchema) ],
             [ .changeSchema(.stroke), .changeSchema(.mandarin) ],
         ] : [
-            [ .changeSchema(.yale), .changeSchema(.jyutping), .changeSchema(.jyutping10keys), .toggleInputMode(.english, nil, false) ],
+            [ .changeSchema(.yale), .changeSchema(.jyutping), .changeSchema(.jyutping10keys), .toggleInputMode(.english, nil, nil, false) ],
             [ .changeSchema(cjSchema), .changeSchema(quickSchema), .changeSchema(.stroke), .changeSchema(.mandarin) ],
         ]
         
