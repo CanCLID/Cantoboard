@@ -366,8 +366,8 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
     }
     
     private func updateColorsAccordingToSwipeDownPercentage() {
-        guard let keyboardIdiom = keyboardState?.keyboardIdiom,
-              keyboardIdiom != .phone else { return }
+        guard let keyboardState = keyboardState,
+              keyboardState.keyboardIdiom.keyboardViewLayout.getSwipeDownKeyCap(keyCap: keyCap, keyboardState: keyboardState) != nil else { return }
         
         let reverseSwipeDownPercentage = 1 - swipeDownPercentage
         // Fade out original key faster by squaring
@@ -379,7 +379,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
             titleAlpha = alphaPercentage
             
             if let swipeDownHintLayer = swipeDownHintLayer {
-                let isSwipeDownKeyShiftMorphing = keyboardIdiom.keyboardViewLayout.isSwipeDownKeyShiftMorphing(keyCap: keyCap)
+                let isSwipeDownKeyShiftMorphing = keyboardState.keyboardIdiom.keyboardViewLayout.isSwipeDownKeyShiftMorphing(keyCap: keyCap)
                 let swipeDownKeyCapTextColor = (isSwipeDownKeyShiftMorphing ? UIColor.label : UIColor.systemGray).resolvedColor(with: traitCollection).cgColor
                 let foregroundColor = swipeDownKeyCapTextColor.interpolate(mainTextColor.cgColor, fraction: swipeDownPercentage * 3)
                 if let swipeDownHintAttributedString = swipeDownHintLayer.string as? NSAttributedString {
