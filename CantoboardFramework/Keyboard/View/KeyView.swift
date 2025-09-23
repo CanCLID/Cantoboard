@@ -582,8 +582,10 @@ extension KeyView {
             defaultChildKeyCapTitle = keyCap.defaultChildKeyCapTitle
         }
         
-        let defaultKeyCapIndex: Int
-        defaultKeyCapIndex = keyCaps.firstIndex(where: { $0.buttonText == defaultChildKeyCapTitle || $0.isRimeTone }) ?? 0
+        let defaultKeyCapIndex: Int =
+            keyCaps.firstIndex { $0.isRimeTone } ??
+            keyCaps.firstIndex { $0 == "\"" || $0 == "'" } ??
+            keyCaps.firstIndex { $0.buttonText == defaultChildKeyCapTitle } ?? 0
         popupView.setup(keyCaps: keyCaps, defaultKeyCapIndex: defaultKeyCapIndex, direction: popupDirection)
         selectedAction = popupView.selectedAction
         
