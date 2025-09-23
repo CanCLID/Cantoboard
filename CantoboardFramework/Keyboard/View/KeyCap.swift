@@ -278,22 +278,26 @@ indirect enum KeyCap: Equatable, ExpressibleByStringLiteral {
         case .toggleCharForm(let charForm): return charForm.caption
         case .singleQuote: return "′"
         case .doubleQuote: return "″"
-        case "（": return "（⠀"
-        case "）": return "⠀）"
-        case "「": return "「⠀"
-        case "」": return "⠀」"
-        case "『": return "『⠀"
-        case "』": return "⠀』"
-        case "〈": return "〈⠀"
-        case "〉": return "⠀〉"
-        case "《": return "《⠀"
-        case "》": return "⠀》"
+        case "（", "「", "『", "〈", "《", "｛", "【", "〔", "〚", "〖", "〘":
+            if #available(iOS 17, *) {
+                // In iOS 17 or above, most characters are automatically kerned.
+                return String(character!)
+            } else {
+                return String(character!) + "⠀"
+            }
+        case "）", "」", "』", "〉", "》", "｝", "】", "〕", "〛", "〗", "〙":
+            if #available(iOS 17, *) {
+                return String(character!)
+            } else {
+                return "⠀" + String(character!)
+            }
         case "［": return "［⠀"
         case "］": return "⠀］"
-        case "｛": return "｛⠀"
-        case "｝": return "⠀｝"
-        case "【": return "【⠀"
-        case "】": return "⠀】"
+        case "｟": return "｟⠀"
+        case "｠": return "⠀｠"
+        case "〝": return "〝⠀"
+        case "〞": return "⠀〞"
+        case "〟": return "⠀〟"
         case "\t": return nil
         case "——": return "⸻"
         case .character(let text, _, _): return text
