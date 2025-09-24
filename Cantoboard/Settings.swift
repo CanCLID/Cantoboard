@@ -188,6 +188,35 @@ extension Settings {
     }
     
     static func buildSections() -> [Section] {
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        let inputMethodOptions: [Option?] = [
+            Switch(LocalizedStrings.mixedMode, \.isMixedModeEnabled,
+                   LocalizedStrings.mixedMode_description, "Guide1-2"),
+            isPad ? nil : Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled, LocalizedStrings.longPressSymbolKeys_description),
+            Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
+                   LocalizedStrings.smartFullStop_description, "Guide8-1"),
+            Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
+            isPad ? nil : Switch(LocalizedStrings.tapHapticFeedback, \.isTapHapticFeedbackEnabled),
+            Segment(LocalizedStrings.candidateFontSize, \.candidateFontSize, [
+                    LocalizedStrings.candidateFontSize_normal: .normal,
+                    LocalizedStrings.candidateFontSize_large: .large,
+            ]),
+            Segment(LocalizedStrings.candidateSelectMode, \.candidateSelectMode, [
+                    LocalizedStrings.candidateSelectMode_expandDownward: .expandDownward,
+                    LocalizedStrings.candidateSelectMode_scrollRight: .scrollRight,
+            ]),
+            Segment(LocalizedStrings.symbolShape, \.symbolShape, [
+                    LocalizedStrings.symbolShape_half: .half,
+                    LocalizedStrings.symbolShape_full: .full,
+                    LocalizedStrings.symbolShape_smart: .smart,
+                ],
+                LocalizedStrings.symbolShape_description, "Guide9-1"
+            ),
+            Switch(LocalizedStrings.showBottomLeftSwitchLangButton, \.showBottomLeftSwitchLangButton,
+                   LocalizedStrings.showBottomLeftSwitchLangButton_description),
+            isPad ? nil : Switch(LocalizedStrings.enableCharPreview, \.enableCharPreview),
+            Switch(LocalizedStrings.enableSystemLexicon, \.enableSystemLexicon),
+        ]
         let padSection = Section(
             LocalizedStrings.padSettings,
             [
@@ -205,38 +234,8 @@ extension Settings {
         )
         
         return [
-            Section(
-                LocalizedStrings.inputMethodSettings,
-                [
-                    Switch(LocalizedStrings.mixedMode, \.isMixedModeEnabled,
-                           LocalizedStrings.mixedMode_description, "Guide1-2"),
-                    Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled, LocalizedStrings.longPressSymbolKeys_description),
-                    Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
-                           LocalizedStrings.smartFullStop_description, "Guide8-1"),
-                    Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
-                    Switch(LocalizedStrings.tapHapticFeedback, \.isTapHapticFeedbackEnabled),
-                    Segment(LocalizedStrings.candidateFontSize, \.candidateFontSize, [
-                            LocalizedStrings.candidateFontSize_normal: .normal,
-                            LocalizedStrings.candidateFontSize_large: .large,
-                    ]),
-                    Segment(LocalizedStrings.candidateSelectMode, \.candidateSelectMode, [
-                            LocalizedStrings.candidateSelectMode_expandDownward: .expandDownward,
-                            LocalizedStrings.candidateSelectMode_scrollRight: .scrollRight,
-                    ]),
-                    Segment(LocalizedStrings.symbolShape, \.symbolShape, [
-                            LocalizedStrings.symbolShape_half: .half,
-                            LocalizedStrings.symbolShape_full: .full,
-                            LocalizedStrings.symbolShape_smart: .smart,
-                        ],
-                        LocalizedStrings.symbolShape_description, "Guide9-1"
-                    ),
-                    Switch(LocalizedStrings.showBottomLeftSwitchLangButton, \.showBottomLeftSwitchLangButton,
-                           LocalizedStrings.showBottomLeftSwitchLangButton_description),
-                    Switch(LocalizedStrings.enableCharPreview, \.enableCharPreview),
-                    Switch(LocalizedStrings.enableSystemLexicon, \.enableSystemLexicon),
-                ]
-            ),
-            UIDevice.current.userInterfaceIdiom == .pad ? padSection : nil,
+            Section(LocalizedStrings.inputMethodSettings, inputMethodOptions.compactMap({ $0 })),
+            isPad ? padSection : nil,
             Section(
                 LocalizedStrings.mixedInputSettings,
                 [
