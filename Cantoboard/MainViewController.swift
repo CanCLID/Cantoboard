@@ -109,7 +109,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0: return UITableViewCell(tintedTitle: LocalizedStrings.installCantoboard_settings, image: CellImage.settings)
-        case 1: return UITableViewCell(title: aboutCells[indexPath.row].title, image: aboutCells[indexPath.row].image)
+        case 1: return UITableViewCell(tintedTitle: aboutCells[indexPath.row].title, image: aboutCells[indexPath.row].image)
         case 2: return InputTableViewCell(tableView: tableView)
         default: return sections[indexPath.section - 3].options[indexPath.row].dequeueCell(with: self)
         }
