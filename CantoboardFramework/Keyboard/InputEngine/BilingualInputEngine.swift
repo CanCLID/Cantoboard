@@ -12,7 +12,7 @@ import CocoaLumberjackSwift
 
 class BilingualInputEngine: InputEngine {
     private static let processCharQueue = DispatchQueue(
-        label: "org.cantoboard.process-char.queue",
+        label: "org.jyutping.cantoboard.processcharqueue",
         qos: .userInteractive,
         attributes: .concurrent)
     

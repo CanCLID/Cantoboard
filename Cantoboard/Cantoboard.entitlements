@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.org.cantoboard</string>
+		<string>group.org.jyutping.cantoboard</string>
 	</array>
 </dict>
 </plist>

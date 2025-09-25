@@ -320,7 +320,7 @@ public struct Settings: Codable, Equatable {
     private static var userDefaults: UserDefaults = initUserDefaults()
     
     private static func initUserDefaults() -> UserDefaults {
-        let suiteName = "group.org.cantoboard"
+        let suiteName = "group.org.jyutping.cantoboard"
         let appGroupDefaults = UserDefaults(suiteName: suiteName)
         if let appGroupDefaults = appGroupDefaults {
             DDLogInfo("Using UserDefaults \(suiteName).")
