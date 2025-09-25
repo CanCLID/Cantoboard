@@ -192,7 +192,8 @@ extension Settings {
         let inputMethodOptions: [Option?] = [
             Switch(LocalizedStrings.mixedMode, \.isMixedModeEnabled,
                    LocalizedStrings.mixedMode_description, "Guide1-2"),
-            isPad ? nil : Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled, LocalizedStrings.longPressSymbolKeys_description),
+            isPad ? nil : Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled,
+                                 LocalizedStrings.longPressSymbolKeys_description),
             Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
                    LocalizedStrings.smartFullStop_description, "Guide8-1"),
             Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
@@ -214,6 +215,8 @@ extension Settings {
             ),
             Switch(LocalizedStrings.showBottomLeftSwitchLangButton, \.showBottomLeftSwitchLangButton,
                    LocalizedStrings.showBottomLeftSwitchLangButton_description),
+            Switch(LocalizedStrings.showEmojiKey, \.showEmojiKey,
+                   isPad ? nil : LocalizedStrings.showEmojiKey_description),
             isPad ? nil : Switch(LocalizedStrings.enableCharPreview, \.enableCharPreview),
             Switch(LocalizedStrings.enableSystemLexicon, \.enableSystemLexicon),
         ]

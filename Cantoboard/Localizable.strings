@@ -23,7 +23,7 @@
 "inputMethodSettings.mixedMode.description" = "熄咗呢個選項，打粵文嗰陣就唔會顯示英文候選詞。";
 "inputMethodSettings.numKeyRow" = "數字鍵列";
 "inputMethodSettings.longPressSymbolKeys" = "長撳選擇符號或數字";
-"inputMethodSettings.longPressSymbolKeys.description" = "喺電話模式，長撳字母鍵可以輸入符號或者數字。";
+"inputMethodSettings.longPressSymbolKeys.description" = "開咗呢個選項，就會多咗啲符號或者數字顯示喺每粒字母鍵嘅右上角，長撳可以輸入。";
 "inputMethodSettings.smartFullStop" = "句號快捷鍵";
 "inputMethodSettings.smartFullStop.description" = "打字之後撳兩下空白鍵，快速輸入句號。";
 "inputMethodSettings.audioFeedback" = "按鍵聲音";
@@ -44,6 +44,8 @@
 開咗混合模式嘅話會根據前文判斷係咩句子，喺英文句子輸入半形符號，中文句子輸入全形符號。";
 "inputMethodSettings.showBottomLeftSwitchLangButton" = "左下角中英切換掣";
 "inputMethodSettings.showBottomLeftSwitchLangButton.description" = "喺 iPhone 同某啲 iPad 型號，喺鍵盤左下角顯示中英切換掣。";
+"inputMethodSettings.showEmojiKey" = "表情符號掣";
+"inputMethodSettings.showEmojiKey.description" = "喺某啲 iPhone 型號，隱藏呢個掣可以留位顯示多一粒標點符號掣。";
 "inputMethodSettings.enableCharPreview" = "文字預覽";
 "inputMethodSettings.enableSystemLexicon" = "iOS 文字替代";
 

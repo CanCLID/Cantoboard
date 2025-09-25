@@ -42,6 +42,8 @@ class LocalizedStrings {
     static let symbolShape_description = localizedString("inputMethodSettings.symbolShape.description")
     static let showBottomLeftSwitchLangButton = localizedString("inputMethodSettings.showBottomLeftSwitchLangButton")
     static let showBottomLeftSwitchLangButton_description = localizedString("inputMethodSettings.showBottomLeftSwitchLangButton.description")
+    static let showEmojiKey = localizedString("inputMethodSettings.showEmojiKey")
+    static let showEmojiKey_description = localizedString("inputMethodSettings.showEmojiKey.description")
     static let enableCharPreview = localizedString("inputMethodSettings.enableCharPreview")
     static let enableSystemLexicon = localizedString("inputMethodSettings.enableSystemLexicon")
     
