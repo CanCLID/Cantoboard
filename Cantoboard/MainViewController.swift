@@ -158,10 +158,11 @@ class CellImage {
     static let onboarding = imageAssets("arrow.uturn.right.circle")
     static let faq = imageAssets("questionmark.circle")
     static let about = imageAssets("info.circle")
-    static let externalLink = imageAssets("arrow.up.right.circle")
+    static let learn = imageAssets("graduationcap")
     static let sourceCode = imageAssets("chevron.left.forwardslash.chevron.right")
     static let repository = imageAssets("book.closed")
     static let telegram = imageAssets("paperplane")
     static let email = imageAssets("envelope")
-    static let rate = imageAssets("pencil")
+    static let rate = imageAssets("bubble.and.pencil")
+    static let team = imageAssets("person.3")
 }

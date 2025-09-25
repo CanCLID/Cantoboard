@@ -10,8 +10,9 @@ import UIKit
 class AboutViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     static let sections: [[(image: UIImage, title: String, url: String)]] = [
         [
-            (CellImage.externalLink, LocalizedStrings.about_jyutpingSite, "https://jyutping.org"),
-            (CellImage.sourceCode, LocalizedStrings.about_sourceCode, "https://github.com/Cantoboard/Cantoboard"),
+            (CellImage.learn, LocalizedStrings.about_learnJyutping, "https://jyutping.org"),
+            (CellImage.sourceCode, LocalizedStrings.about_sourceCode, "https://github.com/CanCLID/Cantoboard"),
+            (CellImage.sourceCode, LocalizedStrings.about_upstreamSourceCode, "https://github.com/Cantoboard/Cantoboard"),
         ],
         [
             (CellImage.repository, "Rime Input Method Engine", "https://github.com/rime/librime"),
@@ -24,9 +25,10 @@ class AboutViewController: UIViewController, UITableViewDelegate, UITableViewDat
             (CellImage.repository, "ISEmojiView", "https://github.com/isaced/ISEmojiView"),
         ],
         [
-            (CellImage.telegram, LocalizedStrings.about_telegram, "https://t.me/cantoboard"),
-            (CellImage.email, LocalizedStrings.about_email, "mailto:cantoboard@gmail.com"),
-            (CellImage.rate, LocalizedStrings.about_appStore, "https://apps.apple.com/us/app/cantoboard/id1556817074"),
+            (CellImage.telegram, LocalizedStrings.about_telegram, "https://t.me/rime_cantonese"),
+            (CellImage.email, LocalizedStrings.about_email, "mailto:support@jyutping.org"),
+            (CellImage.rate, LocalizedStrings.about_appStore, "https://apps.apple.com/us/app/cantoboard-智能廣東話中文輸入法鍵盤/id6752963850"),
+            (CellImage.team, LocalizedStrings.about_joinUs, "https://github.com/CanCLID"),
         ],
     ]
     
@@ -56,7 +58,9 @@ class AboutViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
+        case 0: return LocalizedStrings.about_resources
         case 1: return LocalizedStrings.about_credit
+        case 2: return LocalizedStrings.about_getInTouch
         default: return nil
         }
     }

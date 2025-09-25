@@ -155,9 +155,13 @@ vxq: 撳一下 v/x/q 輸入 1/2/3 聲；
 "faq.2.question" = "遇到其他問題或者 bug 應該點算？";
 "faq.2.answer" = "歡迎嚟我哋嘅 Telegram 用户羣組一齊傾下，又或者去 Cantoboard 嘅 GitHub 儲存庫度開返個 issue。連結可以喺「關於」嗰版揾到。";
 
-"about.jyutpingSite" = "粵拼網站";
+"about.resources" = "資源";
+"about.learnJyutping" = "學粵拼";
 "about.sourceCode" = "GitHub 原始碼";
+"about.upstreamSourceCode" = "GitHub 上游原始碼";
 "about.credit" = "鳴謝";
+"about.getInTouch" = "交流";
 "about.telegram" = "Telegram 用户羣組";
 "about.email" = "電郵反饋";
 "about.appStore" = "去 App Store 評價";
+"about.joinUs" = "加入我哋";

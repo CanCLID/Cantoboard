@@ -145,10 +145,14 @@ class LocalizedStrings {
     static let faq_2_question = localizedString("faq.2.question")
     static let faq_2_answer = localizedString("faq.2.answer")
     
-    static let about_jyutpingSite = localizedString("about.jyutpingSite")
+    static let about_resources = localizedString("about.resources")
+    static let about_learnJyutping = localizedString("about.learnJyutping")
     static let about_sourceCode = localizedString("about.sourceCode")
+    static let about_upstreamSourceCode = localizedString("about.upstreamSourceCode")
     static let about_credit = localizedString("about.credit")
+    static let about_getInTouch = localizedString("about.getInTouch")
     static let about_telegram = localizedString("about.telegram")
     static let about_email = localizedString("about.email")
     static let about_appStore = localizedString("about.appStore")
+    static let about_joinUs = localizedString("about.joinUs")
 }
