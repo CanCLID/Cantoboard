@@ -21,6 +21,8 @@ class CandidateCell: UICollectionViewCell {
     
     var showComment: Bool = false
     var isFilterCell: Bool = false
+    var offsetY: CGFloat = 0
+    
     override var isSelected: Bool {
         didSet {
             if isSelected {
@@ -127,7 +129,7 @@ class CandidateCell: UICollectionViewCell {
         super.layoutSubviews()
         
         if let selectedRectLayer = selectedRectLayer {
-            selectedRectLayer.frame = bounds.insetBy(dx: 4, dy: 4)
+            selectedRectLayer.frame = bounds.offsetBy(dx: 0, dy: offsetY).insetBy(dx: 4, dy: 4)
         }
         
         guard let keyHintLayer = keyHintLayer else { return }
@@ -153,13 +155,13 @@ class CandidateCell: UICollectionViewCell {
             
             commentLayer.fontSize = candidateCommentFontSize
             
-            let textFrame = CGRect(x: 0, y: margin.top, width: bounds.width, height: candidateLabelHeight)
+            let textFrame = CGRect(x: 0, y: margin.top + offsetY, width: bounds.width, height: candidateLabelHeight)
             
             label.frame = textFrame
             
             commentLayer.frame = CGRect(x: 0, y: textFrame.maxY + commentTopPadding, width: bounds.width, height: candidateCommentHeight)
         } else {
-            label.frame = bounds
+            label.frame = bounds.offsetBy(dx: 0, dy: offsetY)
         }
     }
     

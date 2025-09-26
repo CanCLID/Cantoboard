@@ -448,12 +448,11 @@ class CandidatePaneView: UIControl {
     override func layoutSubviews() {
         guard let superview = superview else { return }
         
-        let topMargin = mode == .row ? Self.topMargin : 0
         let height = mode == .row ? rowHeight : superview.bounds.height
         let candidateViewWidth = superview.bounds.width - (mode == .row && !isFullPadCandidateBar && expandButton.isHidden ? 0 : expandButtonWidth)
         let leftRightInset = isFullPadCandidateBar ? 0 : layoutConstants.ref.candidatePaneViewLeftRightInset
         
-        let collectionViewFrame = CGRect(x: leftRightInset, y: topMargin, width: candidateViewWidth - leftRightInset * 2, height: height)
+        let collectionViewFrame = CGRect(x: leftRightInset, y: 0, width: candidateViewWidth - leftRightInset * 2, height: height)
         if collectionView.frame != collectionViewFrame {
             collectionView.frame = collectionViewFrame
             collectionView.collectionViewLayout.invalidateLayout()
@@ -462,8 +461,9 @@ class CandidatePaneView: UIControl {
         super.layoutSubviews()
         layoutButtons()
         
+        let visuallyAvailableHeight = height + LayoutConstants.keyboardViewTopInset
         let topBottomMargin: CGFloat = mode == .row ? 8 : 0
-        let separatorFrame = CGRect(x: 0, y: topBottomMargin, width: Self.separatorWidth, height: height + (topMargin - topBottomMargin) * 2)
+        let separatorFrame = CGRect(x: 0, y: topBottomMargin, width: Self.separatorWidth, height: visuallyAvailableHeight - topBottomMargin * 2)
         
         if isFullPadCandidateBar {
             leftSeparator.isHidden = true
@@ -697,6 +697,9 @@ extension CandidatePaneView: UICollectionViewDataSource {
     private func dequeueCandidateCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CandidateCell.reuseId, for: indexPath) as! CandidateCell
         guard let candidateOrganizer = candidateOrganizer else { return cell }
+        
+        // slightly shift down to vertically center the cell visually
+        cell.offsetY = candidateOrganizer.groupByMode == .byFrequency ? Self.topMargin : 0
         
         let candidateCount = self.collectionView.numberOfItems(inSection: translateCollectionViewSectionToCandidateSection(indexPath.section))
         if candidateOrganizer.groupByMode == .byFrequency && indexPath.row >= candidateCount - 10 {
