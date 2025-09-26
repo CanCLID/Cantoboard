@@ -15,9 +15,11 @@ class CandidateCell: UICollectionViewCell {
     static let margin = UIEdgeInsets(top: 3, left: 8, bottom: 0, right: 8)
     private static let fontSizePerHeight: CGFloat = 18 / "＠".size(withFont: UIFont.systemFont(ofSize: 20)).height
     
-    private static let candidateLabelHeightRatio: CGFloat = 0.6
-    private static let candidateCommentHeightRatio: CGFloat = 0.25
-    private static let candidateCommentPaddingHeightRatio: CGFloat = 0.05
+    private static let candidateCommentHeightRatio: CGFloat = 3 / 8
+    private static let candidateCommentPaddingHeightRatio: CGFloat = -0.03 // Slightly shift up when there is a comment
+    private static let candidateLabelHeightRatio: CGFloat = 5 / 8
+    private static let candidateLabelPaddingHeightRatio: CGFloat = -0.05 // Reduce the gap between the label and the comment
+    // When reversely stacked, shift up -0.02 and gap -0.03 is the most visually pleasing
     
     var showComment: Bool = false
     var isFilterCell: Bool = false
@@ -129,7 +131,7 @@ class CandidateCell: UICollectionViewCell {
         super.layoutSubviews()
         
         if let selectedRectLayer = selectedRectLayer {
-            selectedRectLayer.frame = bounds.offsetBy(dx: 0, dy: offsetY).insetBy(dx: 4, dy: 4)
+            selectedRectLayer.frame = bounds.offsetBy(dx: 0, dy: offsetY).insetBy(dx: 4, dy: showComment ? 0 : 4)
         }
         
         guard let keyHintLayer = keyHintLayer else { return }
@@ -152,14 +154,15 @@ class CandidateCell: UICollectionViewCell {
             let candidateCommentHeight = availableHeight * Self.candidateCommentHeightRatio
             let candidateCommentFontSize = candidateCommentHeight * Self.fontSizePerHeight
             let commentTopPadding = availableHeight * Self.candidateCommentPaddingHeightRatio
+            let labelTopPadding = availableHeight * Self.candidateLabelPaddingHeightRatio
             
             commentLayer.fontSize = candidateCommentFontSize
             
-            let textFrame = CGRect(x: 0, y: margin.top + offsetY, width: bounds.width, height: candidateLabelHeight)
+            let commentFrame = CGRect(x: 0, y: margin.top + offsetY + commentTopPadding, width: bounds.width, height: candidateCommentHeight)
             
-            label.frame = textFrame
+            commentLayer.frame = commentFrame
             
-            commentLayer.frame = CGRect(x: 0, y: textFrame.maxY + commentTopPadding, width: bounds.width, height: candidateCommentHeight)
+            label.frame = CGRect(x: 0, y: commentFrame.maxY + labelTopPadding, width: bounds.width, height: candidateLabelHeight)
         } else {
             label.frame = bounds.offsetBy(dx: 0, dy: offsetY)
         }
