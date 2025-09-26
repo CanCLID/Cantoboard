@@ -46,7 +46,7 @@ class CandidateCell: UICollectionViewCell {
     
     weak var label: UILabel?
     weak var keyHintLayer: KeyHintLayer?
-    weak var commentLayer: CATextLayer?
+    weak var commentLayer: KeyHintLayer?
     weak var selectedRectLayer: CALayer?
     
     // Uncomment this to debug memory leak.
@@ -86,7 +86,7 @@ class CandidateCell: UICollectionViewCell {
         
         if showComment, let comment = comment {
             if commentLayer == nil {
-                let commentLayer = CATextLayer()
+                let commentLayer = KeyHintLayer()
                 self.commentLayer = commentLayer
                 layer.addSublayer(commentLayer)
                 commentLayer.alignmentMode = .center
@@ -95,7 +95,8 @@ class CandidateCell: UICollectionViewCell {
                 commentLayer.foregroundColor = label?.textColor.resolvedColor(with: traitCollection).cgColor
                 commentLayer.font = UIFont.systemFont(ofSize: 10 /* ignored */)
             }
-            commentLayer?.string = comment
+            
+            commentLayer?.setup(keyCap: nil, hintText: comment)
         } else {
             commentLayer?.removeFromSuperlayer()
             commentLayer = nil
