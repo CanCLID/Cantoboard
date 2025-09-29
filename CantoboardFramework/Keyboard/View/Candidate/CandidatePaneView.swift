@@ -23,7 +23,6 @@ protocol CandidatePaneViewDelegate: NSObject {
 class CandidatePaneView: UIControl {
     private static let miniStatusSize = CGSize(width: 20, height: 20)
     private static let separatorWidth: CGFloat = 1
-    private static let topMargin: CGFloat = LayoutConstants.keyboardViewTopInset / 2
     
     // Uncomment this to debug memory leak.
     private let c = InstanceCounter<CandidatePaneView>()
@@ -374,6 +373,10 @@ class CandidatePaneView: UIControl {
         layoutConstants.ref.autoCompleteBarHeight
     }
     
+    private var topMargin: CGFloat {
+        layoutConstants.ref.keyboardViewInsets.top / 2
+    }
+    
     private var expandButtonWidth: CGFloat {
         rowHeight // Square
     }
@@ -448,7 +451,7 @@ class CandidatePaneView: UIControl {
     override func layoutSubviews() {
         guard let superview = superview else { return }
         
-        let height = mode == .row ? rowHeight + LayoutConstants.keyboardViewTopInset : superview.bounds.height
+        let height = mode == .row ? rowHeight + layoutConstants.ref.keyboardViewInsets.top : superview.bounds.height
         let candidateViewWidth = superview.bounds.width - (mode == .row && !isFullPadCandidateBar && expandButton.isHidden ? 0 : expandButtonWidth)
         let leftRightInset = isFullPadCandidateBar ? 0 : layoutConstants.ref.candidatePaneViewLeftRightInset
         
@@ -490,13 +493,13 @@ class CandidatePaneView: UIControl {
         guard let superview = superview else { return }
         
         let buttons = [expandButton, inputModeButton, backspaceButton, charFormButton, scrollUpButton, scrollDownButton]
-        var buttonY: CGFloat = mode == .row ? Self.topMargin : 0
+        var buttonY: CGFloat = mode == .row ? topMargin : 0
         let candidatePaneViewLeftRightInset = isFullPadCandidateBar ? 0 : layoutConstants.ref.candidatePaneViewLeftRightInset
         let candidateViewWidth = superview.bounds.width - (expandButton.isHidden ? directionalLayoutMargins.trailing - StatusButton.statusInset : candidatePaneViewLeftRightInset)
         for button in buttons {
             guard let button = button, !button.isHidden else { continue }
             if button == inputModeButton && inputModeButton.isMini {
-                button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - Self.miniStatusSize.width, y: Self.topMargin), size: Self.miniStatusSize)
+                button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - Self.miniStatusSize.width, y: topMargin), size: Self.miniStatusSize)
                 continue
             }
             button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - expandButtonWidth, y: buttonY), size: CGSize(width: expandButtonWidth, height: expandButtonWidth))
@@ -700,7 +703,7 @@ extension CandidatePaneView: UICollectionViewDataSource {
         guard let candidateOrganizer = candidateOrganizer else { return cell }
         
         // slightly shift down to align candidates in row mode precisely
-        cell.offsetY = mode == .table && candidateOrganizer.groupByMode == .byFrequency ? Self.topMargin : 0
+        cell.offsetY = mode == .table && candidateOrganizer.groupByMode == .byFrequency ? topMargin : 0
         
         let candidateCount = self.collectionView.numberOfItems(inSection: translateCollectionViewSectionToCandidateSection(indexPath.section))
         if candidateOrganizer.groupByMode == .byFrequency && indexPath.row >= candidateCount - 10 {

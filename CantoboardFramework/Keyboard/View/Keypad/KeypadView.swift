@@ -220,7 +220,7 @@ class KeypadView: UIView, BaseKeyboardView {
     }
     
     private func layoutButtons(_ buttons: [[KeypadButton]], initialX: CGFloat, layoutConstants: LayoutConstants) {
-        var x: CGFloat = initialX, y: CGFloat = LayoutConstants.keyboardViewTopInset + layoutConstants.autoCompleteBarHeight
+        var x: CGFloat = initialX, y: CGFloat = layoutConstants.keyboardViewInsets.top + layoutConstants.autoCompleteBarHeight
         
         for row in buttons {
             x = initialX
