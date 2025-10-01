@@ -23,6 +23,7 @@ protocol CandidatePaneViewDelegate: NSObject {
 class CandidatePaneView: UIControl {
     private static let miniStatusSize = CGSize(width: 20, height: 20)
     private static let separatorWidth: CGFloat = 1
+    private static let topMargin: CGFloat = LayoutConstants.keyboardViewTopInset / 2
     
     // Uncomment this to debug memory leak.
     private let c = InstanceCounter<CandidatePaneView>()
@@ -447,8 +448,8 @@ class CandidatePaneView: UIControl {
     override func layoutSubviews() {
         guard let superview = superview else { return }
         
-        let height = mode == .row ? rowHeight : superview.bounds.height
-        let candidateViewWidth = superview.bounds.width - expandButtonWidth
+        let height = mode == .row ? rowHeight + LayoutConstants.keyboardViewTopInset : superview.bounds.height
+        let candidateViewWidth = superview.bounds.width - (mode == .row && !isFullPadCandidateBar && expandButton.isHidden ? 0 : expandButtonWidth)
         let leftRightInset = isFullPadCandidateBar ? 0 : layoutConstants.ref.candidatePaneViewLeftRightInset
         
         let collectionViewFrame = CGRect(x: leftRightInset, y: 0, width: candidateViewWidth - leftRightInset * 2, height: height)
@@ -489,13 +490,13 @@ class CandidatePaneView: UIControl {
         guard let superview = superview else { return }
         
         let buttons = [expandButton, inputModeButton, backspaceButton, charFormButton, scrollUpButton, scrollDownButton]
-        var buttonY: CGFloat = 0
+        var buttonY: CGFloat = mode == .row ? Self.topMargin : 0
         let candidatePaneViewLeftRightInset = isFullPadCandidateBar ? 0 : layoutConstants.ref.candidatePaneViewLeftRightInset
         let candidateViewWidth = superview.bounds.width - (expandButton.isHidden ? directionalLayoutMargins.trailing - StatusButton.statusInset : candidatePaneViewLeftRightInset)
         for button in buttons {
             guard let button = button, !button.isHidden else { continue }
             if button == inputModeButton && inputModeButton.isMini {
-                button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - Self.miniStatusSize.width, y: 0), size: Self.miniStatusSize)
+                button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - Self.miniStatusSize.width, y: Self.topMargin), size: Self.miniStatusSize)
                 continue
             }
             button.frame = CGRect(origin: CGPoint(x: candidateViewWidth - expandButtonWidth, y: buttonY), size: CGSize(width: expandButtonWidth, height: expandButtonWidth))
@@ -588,7 +589,9 @@ extension CandidatePaneView {
             }
         }
         
+        collectionView.reloadData() // Needed for recomputing offsetY of each candidate cell
         collectionView.collectionViewLayout.invalidateLayout()
+        // Do not call collectionView.layoutIfNeeded() here or the contentOffset will not be preserved.
         layoutSubviews()
         
         if newMode == .row {
@@ -695,6 +698,9 @@ extension CandidatePaneView: UICollectionViewDataSource {
     private func dequeueCandidateCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CandidateCell.reuseId, for: indexPath) as! CandidateCell
         guard let candidateOrganizer = candidateOrganizer else { return cell }
+        
+        // slightly shift down to align candidates in row mode precisely
+        cell.offsetY = mode == .table && candidateOrganizer.groupByMode == .byFrequency ? Self.topMargin : 0
         
         let candidateCount = self.collectionView.numberOfItems(inSection: translateCollectionViewSectionToCandidateSection(indexPath.section))
         if candidateOrganizer.groupByMode == .byFrequency && indexPath.row >= candidateCount - 10 {
@@ -835,6 +841,7 @@ extension CandidatePaneView: CandidateCollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didLongPressItemAt indexPath: IndexPath) {
         self.collectionView(collectionView, didUnhighlightItemAt: indexPath)
         
+        setPreserveCandidateOffset()
         delegate?.handleKey(.longPressCandidate(translateCollectionViewIndexPathToCandidateIndexPath(indexPath)))
     }
     
