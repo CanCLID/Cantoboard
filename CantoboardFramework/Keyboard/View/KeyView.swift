@@ -12,13 +12,18 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
     private static let swipeDownMinCutOffYRatio: CGFloat = 0.2
     private static let swipeDownMaxCutOffYRatio: CGFloat = 0.5
     private static let swipeDownFullYRatio: CGFloat = 0.8
-    private static let padLandscapeFontRatio = 1.3
     private static let morphingKeyFontRatio = 0.9
     private static let morphingSymbolKeyFontRatio = 0.85
     private static let morphingSwipeDownHintLayerMinScale = 0.6
     private static let padTopRowButtonFontSize: CGFloat = 15
+    private static let keypadButtonFontSize: CGFloat = 26
     private static let morphingKeyEdgeInsets = UIEdgeInsets(top: 4, left: 5, bottom: 8, right: 5)
     private static let padTopRowButtonEdgeInsets = UIEdgeInsets(top: 3, left: 4, bottom: 5, right: 4)
+    
+    private var orientationalFontRatio: CGFloat {
+        guard let keyboardState = keyboardState else { return 1 }
+        return keyboardState.keyboardIdiom.isPad && !keyboardState.isPortrait ? 4 / 3 : 1
+    }
     
     private var leftKeyHintLayer: KeyHintLayer?
     private var rightKeyHintLayer: KeyHintLayer?
@@ -40,7 +45,6 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
     private(set) var keyCap: KeyCap = .none
     private var keyboardState: KeyboardState? = nil
     private var isPadTopRowButton = false
-    private var action: KeyboardAction = .none
     private var comboCount: Int = 0
     private var comboTimer: Timer?
     private var inComboMode: Bool = false
@@ -55,7 +59,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
         }
     }
     
-    var selectedAction: KeyboardAction = .none
+    var selectedKeyCap: KeyCap = .none
     
     var hitTestFrame: CGRect?
     
@@ -139,8 +143,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
         
         let shouldDisableCombo = self.keyCap.isCombo != keyCap.isCombo
         self.keyCap = keyCap
-        self.action = keyCap.action
-        self.selectedAction = keyCap.action
+        self.selectedKeyCap = keyCap
         self.isPadTopRowButton = isPadTopRowButton
         self.keyboardState = newState
         if shouldDisableCombo {
@@ -167,10 +170,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
         contentEdgeInsets = layoutConstants.ref.keyViewInsets
         titleEdgeInsets = keyCap.buttonTitleInset
         layer.cornerRadius = layoutConstants.ref.cornerRadius
-        titleLabelFontSize = isPadTopRowButton ? Self.padTopRowButtonFontSize : layoutConstants.ref.getButtonFontSize(keyCap.unescaped)
-        if keyboardIdiom.isPad && !keyboardState.isPortrait {
-            titleLabelFontSize *= Self.padLandscapeFontRatio
-        }
+        titleLabelFontSize = layoutConstants.ref.getButtonFontSize(keyCap.unescaped) * (isPadTopRowButton ? 0.75 : 1) * orientationalFontRatio
         
         var maskedCorners: CACornerMask = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
         var shadowOpacity: Float = 1.0
@@ -208,6 +208,9 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
             if keyboardState.inputMode != .english,
                case .keyboardType(.alphabetic) = keyCap {
                 titleText = keyboardState.activeSchema.shortName
+            } else if self is KeypadButton,
+                      case .toggleInputMode = keyCap {
+                titleText = KeyCap.keyboardType(.alphabetic(.lowercased)).buttonText
             }
             // titleLabel?.baselineAdjustment = .alignCenters
             // titleLabel?.lineBreakMode = .byClipping
@@ -240,6 +243,9 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
             // Shrink edge insets to avoid swipeDownHintLayer and titleLabel overlapping each other.
             contentEdgeInsets = isPadTopRowButton ? Self.padTopRowButtonEdgeInsets : Self.morphingKeyEdgeInsets
             
+            if isPadTopRowButton {
+                titleLabelFontSize = Self.padTopRowButtonFontSize * orientationalFontRatio
+            }
             // Scale swipeDownHintLayer by swipeDownPercentage.
             // For shift morphing keys (morphing keys appearing even in autocapped mode), they should appear as large as the main titleLabel.
             // Using morphingKeyFontRatio = 0.9 to shrink the swipe down labels. As keys ,.;' look smaller than their swipe down key counterparts.
@@ -255,6 +261,15 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
             swipeDownHintLayer = nil
             contentVerticalAlignment = keyboardIdiom.isPadFull &&
                 !(keyCap.keyCapType == .input || keyCap.keyCapType == .space) ? .bottom : .center
+        }
+        
+        if self is KeypadButton {
+            switch keyCap {
+            case .character, .stroke:
+                titleLabelFontSize = Self.keypadButtonFontSize * orientationalFontRatio
+                titleLabel?.font = .systemFont(ofSize: titleLabelFontSize)
+            default: ()
+            }
         }
         
         titleLabel?.adjustsFontSizeToFitWidth = true
@@ -366,8 +381,8 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
     }
     
     private func updateColorsAccordingToSwipeDownPercentage() {
-        guard let keyboardIdiom = keyboardState?.keyboardIdiom,
-              keyboardIdiom != .phone else { return }
+        guard let keyboardState = keyboardState,
+              keyboardState.keyboardIdiom.keyboardViewLayout.getSwipeDownKeyCap(keyCap: keyCap, keyboardState: keyboardState) != nil else { return }
         
         let reverseSwipeDownPercentage = 1 - swipeDownPercentage
         // Fade out original key faster by squaring
@@ -379,7 +394,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
             titleAlpha = alphaPercentage
             
             if let swipeDownHintLayer = swipeDownHintLayer {
-                let isSwipeDownKeyShiftMorphing = keyboardIdiom.keyboardViewLayout.isSwipeDownKeyShiftMorphing(keyCap: keyCap)
+                let isSwipeDownKeyShiftMorphing = keyboardState.keyboardIdiom.keyboardViewLayout.isSwipeDownKeyShiftMorphing(keyCap: keyCap)
                 let swipeDownKeyCapTextColor = (isSwipeDownKeyShiftMorphing ? UIColor.label : UIColor.systemGray).resolvedColor(with: traitCollection).cgColor
                 let foregroundColor = swipeDownKeyCapTextColor.interpolate(mainTextColor.cgColor, fraction: swipeDownPercentage * 3)
                 if let swipeDownHintAttributedString = swipeDownHintLayer.string as? NSAttributedString {
@@ -405,7 +420,7 @@ class KeyView: HighlightableButton, CAAnimationDelegate {
     
     private func adjustImageFontSize(_ image: UIImage?) -> UIImage? {
         let config = UIImage.SymbolConfiguration(
-            pointSize: keyboardState?.keyboardIdiom.isPad ?? false ? 24 : 20,
+            pointSize: keyboardState?.keyboardIdiom.isPad ?? false ? 18 * orientationalFontRatio : 20,
             weight: .light)
         return image?.applyingSymbolConfiguration(config)
     }
@@ -453,7 +468,7 @@ extension KeyView {
 extension KeyView {
     func keyTouchBegan(_ touch: UITouch) {
         isHighlighted = true
-        selectedAction = keyCap.action
+        selectedKeyCap = keyCap
         updatePopup(isLongPress: false)
         layer.removeAllAnimations()
         
@@ -478,14 +493,14 @@ extension KeyView {
                 shouldAcceptLongPress = false
                 removePopup()
                 
-                selectedAction = delta.y >= swipeDownThreshold ? padSwipeDownKeyCap.action : keyCap.action
+                selectedKeyCap = delta.y >= swipeDownThreshold ? padSwipeDownKeyCap : keyCap
                 return
             }
         }
         
         if let popupView = popupView {
-            popupView.updateSelectedAction(touch)
-            selectedAction = popupView.selectedAction
+            popupView.updateSelectedKeyCap(touch)
+            selectedKeyCap = popupView.selectedKeyCap
         }
     }
     
@@ -556,12 +571,9 @@ extension KeyView {
         }
         
         let keyCaps = computeKeyCap(isLongPress: isLongPress)
-        // On iPad, shows popup only in long press mode and if there are multiple choices.
-        let isPadKeyWithoutChildren = keyboardIdiom.isPad && keyCaps.count == 1
-        let isPhoneWithPreviewDisabled = !Settings.cached.enableCharPreview && !isLongPress
-        // Disable preview in keypad view.
-        let isInKeypadView = !isLongPress && shouldDisablePreview
-        if isPadKeyWithoutChildren || isPhoneWithPreviewDisabled || isInKeypadView {
+        // Always show popup in long press mode if there are multiple choices.
+        // Otherwise, preview is disabled in keypad view and on iPad, or if the settings item is disabled on iPhone.
+        if keyCaps.count == 1 && (!Settings.cached.enableCharPreview || keyboardIdiom.isPad || shouldDisablePreview) {
             return
         }
         
@@ -582,10 +594,12 @@ extension KeyView {
             defaultChildKeyCapTitle = keyCap.defaultChildKeyCapTitle
         }
         
-        let defaultKeyCapIndex: Int
-        defaultKeyCapIndex = keyCaps.firstIndex(where: { $0.buttonText == defaultChildKeyCapTitle || $0.isRimeTone }) ?? 0
+        let defaultKeyCapIndex: Int =
+            keyCaps.firstIndex { $0.isRimeTone } ??
+            keyCaps.firstIndex { $0 == "\"" || $0 == "'" } ??
+            keyCaps.firstIndex { $0.buttonText == defaultChildKeyCapTitle } ?? 0
         popupView.setup(keyCaps: keyCaps, defaultKeyCapIndex: defaultKeyCapIndex, direction: popupDirection)
-        selectedAction = popupView.selectedAction
+        selectedKeyCap = popupView.selectedKeyCap
         
         isPopupInLongPressMode = isLongPress
         setupView()

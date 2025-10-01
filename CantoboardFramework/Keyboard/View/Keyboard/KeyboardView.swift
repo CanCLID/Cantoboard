@@ -96,7 +96,7 @@ class KeyboardView: UIView, BaseKeyboardView {
     }
     
     private func changeState(prevState: KeyboardState, newState: KeyboardState) {
-        var isViewDirty = prevState.keyboardType != newState.keyboardType ||
+        let isViewDirty = prevState.keyboardType != newState.keyboardType ||
             prevState.keyboardContextualType != newState.keyboardContextualType ||
             prevState.symbolShape != newState.symbolShape ||
             prevState.activeSchema != newState.activeSchema ||
@@ -107,12 +107,8 @@ class KeyboardView: UIView, BaseKeyboardView {
             prevState.isPortrait != newState.isPortrait ||
             prevState.specialSymbolShapeOverride != newState.specialSymbolShapeOverride ||
             prevState.isKeyboardAppearing != newState.isKeyboardAppearing ||
+            prevState.needsInputModeSwitchKey != newState.needsInputModeSwitchKey ||
             prevState.charForm != newState.charForm
-        
-        if prevState.needsInputModeSwitchKey != newState.needsInputModeSwitchKey {
-            keyRows.forEach { $0.needsInputModeSwitchKey = newState.needsInputModeSwitchKey }
-            isViewDirty = true
-        }
         
         if prevState.returnKeyType != newState.returnKeyType {
             newLineKey?.setKeyCap(.returnKey(newState.returnKeyType), keyboardState: state)
@@ -325,11 +321,6 @@ class KeyboardView: UIView, BaseKeyboardView {
                 }
             }
             
-            if isInCangjieMode && !isInEnglishMode && isLetterKey {
-                let keyCapHints = KeyCapHints(leftHint: leftHint, rightHint: isInMixedMode ? c : rightHint, bottomHint: bottomHint)
-                return .cangjie(keyChar, keyCapHints, childrenKeyCaps, Settings.cached.cangjieKeyCapMode)
-            }
-            
             if !isInEnglishMode && state.activeSchema.supportCantoneseTonalInput {
                 if isInLongPressMode {
                     switch c {
@@ -393,6 +384,9 @@ class KeyboardView: UIView, BaseKeyboardView {
             }
             
             let keyCapHints = leftHint == nil && rightHint == nil && bottomHint == nil ? nil : KeyCapHints(leftHint: leftHint, rightHint: rightHint, bottomHint: bottomHint)
+            if isInCangjieMode && !isInEnglishMode && isLetterKey {
+                return .cangjie(keyChar, keyCapHints, childrenKeyCaps, Settings.cached.cangjieKeyCapMode)
+            }
             return .character(keyChar, keyCapHints, childrenKeyCaps)
         case .shift: return .shift(shiftState)
         case .keyboardType where groupId == 2 && state.keyboardIdiom.isPad:
@@ -430,7 +424,7 @@ class KeyboardView: UIView, BaseKeyboardView {
                     let shouldShowEmojiKey = layoutConstants.ref.idiom.isPad || state.needsInputModeSwitchKey
                     return shouldShowEmojiKey ? KeyCap.keyboardType(.emojis) : nil
                 } else {
-                    return .toggleInputMode(state.inputMode.afterToggle, state.activeSchema, true)
+                    return .toggleInputMode(state.inputMode.afterToggle, state.mainSchema, state.reverseLookupSchema, true)
                 }
             default: return keyCap
             }
@@ -615,14 +609,17 @@ extension KeyboardView {
 
 extension KeyboardView: EmojiViewDelegate {
     func emojiViewDidSelectEmoji(_ emoji: String, emojiView: EmojiView) {
+        FeedbackProvider.play(keyboardAction: .emoji(emoji))
         delegate?.handleKey(.emoji(emoji))
     }
     
     func emojiViewDidPressChangeKeyboardButton(_ emojiView: EmojiView) {
+        FeedbackProvider.play(keyboardAction: .keyboardType(.alphabetic(.lowercased)))
         delegate?.handleKey(.keyboardType(.alphabetic(.lowercased)))
     }
     
     func emojiViewDidPressDeleteBackwardButton(_ emojiView: EmojiView) {
+        FeedbackProvider.play(keyboardAction: .backspace)
         delegate?.handleKey(.backspace)
     }
 }

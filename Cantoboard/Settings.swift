@@ -116,6 +116,7 @@ private class Segment<T: Equatable>: Option {
     func dequeueCell(with controller: MainViewController) -> UITableViewCell {
         self.controller = controller
         control = UISegmentedControl(items: options.map { $0.key })
+        control.setTitleTextAttributes(String.HKAttribute, for: .normal)
         control.selectedSegmentIndex = options.firstIndex(where: { $1 == value })!
         control.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         return makeCell(with: control)
@@ -162,7 +163,7 @@ private class IntStepper<T: BinaryInteger>: Option {
         control.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         
         valueLabel = UILabel()
-        valueLabel.text = String(value)
+        valueLabel.attributedText = String(value).toHKAttributedString
         
         let stackView = UIStackView(arrangedSubviews: [valueLabel, control])
         stackView.spacing = 5
@@ -172,7 +173,7 @@ private class IntStepper<T: BinaryInteger>: Option {
     
     @objc func updateSettings() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        valueLabel.text = String(T(control.value))
+        valueLabel.attributedText = String(T(control.value)).toHKAttributedString
         value = T(control.value)
         controller.settings[keyPath: key] = value
         controller.view.endEditing(true)
@@ -187,6 +188,35 @@ extension Settings {
     }
     
     static func buildSections() -> [Section] {
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        let inputMethodOptions: [Option?] = [
+            Switch(LocalizedStrings.mixedMode, \.isMixedModeEnabled,
+                   LocalizedStrings.mixedMode_description, "Guide1-2"),
+            isPad ? nil : Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled, LocalizedStrings.longPressSymbolKeys_description),
+            Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
+                   LocalizedStrings.smartFullStop_description, "Guide8-1"),
+            Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
+            isPad ? nil : Switch(LocalizedStrings.tapHapticFeedback, \.isTapHapticFeedbackEnabled),
+            Segment(LocalizedStrings.candidateFontSize, \.candidateFontSize, [
+                    LocalizedStrings.candidateFontSize_normal: .normal,
+                    LocalizedStrings.candidateFontSize_large: .large,
+            ]),
+            Segment(LocalizedStrings.candidateSelectMode, \.candidateSelectMode, [
+                    LocalizedStrings.candidateSelectMode_expandDownward: .expandDownward,
+                    LocalizedStrings.candidateSelectMode_scrollRight: .scrollRight,
+            ]),
+            Segment(LocalizedStrings.symbolShape, \.symbolShape, [
+                    LocalizedStrings.symbolShape_half: .half,
+                    LocalizedStrings.symbolShape_full: .full,
+                    LocalizedStrings.symbolShape_smart: .smart,
+                ],
+                LocalizedStrings.symbolShape_description, "Guide9-1"
+            ),
+            Switch(LocalizedStrings.showBottomLeftSwitchLangButton, \.showBottomLeftSwitchLangButton,
+                   LocalizedStrings.showBottomLeftSwitchLangButton_description),
+            isPad ? nil : Switch(LocalizedStrings.enableCharPreview, \.enableCharPreview),
+            Switch(LocalizedStrings.enableSystemLexicon, \.enableSystemLexicon),
+        ]
         let padSection = Section(
             LocalizedStrings.padSettings,
             [
@@ -204,38 +234,8 @@ extension Settings {
         )
         
         return [
-            Section(
-                LocalizedStrings.inputMethodSettings,
-                [
-                    Switch(LocalizedStrings.mixedMode, \.isMixedModeEnabled,
-                           LocalizedStrings.mixedMode_description, "Guide1-2"),
-                    Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled, LocalizedStrings.longPressSymbolKeys_description),
-                    Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
-                           LocalizedStrings.smartFullStop_description, "Guide8-1"),
-                    Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
-                    Switch(LocalizedStrings.tapHapticFeedback, \.isTapHapticFeedbackEnabled),
-                    Segment(LocalizedStrings.candidateFontSize, \.candidateFontSize, [
-                            LocalizedStrings.candidateFontSize_normal: .normal,
-                            LocalizedStrings.candidateFontSize_large: .large,
-                    ]),
-                    Segment(LocalizedStrings.candidateSelectMode, \.candidateSelectMode, [
-                            LocalizedStrings.candidateSelectMode_expandDownward: .expandDownward,
-                            LocalizedStrings.candidateSelectMode_scrollRight: .scrollRight,
-                    ]),
-                    Segment(LocalizedStrings.symbolShape, \.symbolShape, [
-                            LocalizedStrings.symbolShape_half: .half,
-                            LocalizedStrings.symbolShape_full: .full,
-                            LocalizedStrings.symbolShape_smart: .smart,
-                        ],
-                        LocalizedStrings.symbolShape_description, "Guide9-1"
-                    ),
-                    Switch(LocalizedStrings.showBottomLeftSwitchLangButton, \.showBottomLeftSwitchLangButton,
-                           LocalizedStrings.showBottomLeftSwitchLangButton_description),
-                    Switch(LocalizedStrings.enableCharPreview, \.enableCharPreview),
-                    Switch(LocalizedStrings.enableSystemLexicon, \.enableSystemLexicon),
-                ]
-            ),
-            UIDevice.current.userInterfaceIdiom == .pad ? padSection : nil,
+            Section(LocalizedStrings.inputMethodSettings, inputMethodOptions.compactMap({ $0 })),
+            isPad ? padSection : nil,
             Section(
                 LocalizedStrings.mixedInputSettings,
                 [

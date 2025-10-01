@@ -124,6 +124,7 @@ public struct RimeSettings: Codable, Equatable {
 }
 
 public struct Settings: Codable, Equatable {
+    private static let prevSettingsKeyName = "prevSettings"
     private static let settingsKeyName = "Settings"
     private static let defaultMixedModeEnabled: Bool = true
     private static let defaultAutoCapEnabled: Bool = true
@@ -133,7 +134,7 @@ public struct Settings: Codable, Equatable {
     private static let defaultCandidateSelectMode: CandidateSelectMode = .expandDownward
     private static let defaultSymbolShape: SymbolShape = .smart
     private static let defaultSmartSymbolShapeDefault: SymbolShape = .full
-    private static let defaultSpaceAction: SpaceAction = .insertText
+    private static let defaultSpaceAction: SpaceAction = .insertCandidate
     private static let defaultToneInputMode: ToneInputMode = .longPress
     private static let defaultRimeSettings: RimeSettings = RimeSettings()
     private static let defaultEnglishLocale: EnglishLocale = .us
@@ -146,7 +147,7 @@ public struct Settings: Codable, Equatable {
     private static let defaultEnableSystemLexicon: Bool = false
     private static let defaultPressSymbolKeysEnabled: Bool = true
     private static let defaultEnableHKCorrection: Bool = true
-    private static let defaultFullWidthSpaceMode: FullWidthSpaceMode = .off
+    private static let defaultFullWidthSpaceMode: FullWidthSpaceMode = .shift
     private static let defaultEnablePredictiveText: Bool = true
     private static let defaultPredictiveTextOffensiveWord: Bool = false
     private static let defaultFullPadCandidateBar: Bool = true
@@ -287,10 +288,6 @@ public struct Settings: Codable, Equatable {
     
     public static func save(_ settings: Settings) {
         _cached = settings
-        guard hasFullAccess else {
-            DDLogInfo("Skip updating UserDefaults as we don't have full access.")
-            return
-        }
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(settings) {
             userDefaults.set(encoded, forKey: settingsKeyName)
@@ -299,7 +296,26 @@ public struct Settings: Codable, Equatable {
         }
     }
     
-    public static var hasFullAccess = true
+    public static var prev: Settings {
+        if let saved = userDefaults.object(forKey: prevSettingsKeyName) as? Data {
+            let decoder = JSONDecoder()
+            do {
+                return try decoder.decode(Settings.self, from: saved)
+            } catch {
+                DDLogInfo("Failed to load prev settings \(saved). Falling back to default settings. Error: \(error)")
+            }
+        }
+        return Settings()
+    }
+    
+    public static func savePrev() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(cached) {
+            userDefaults.set(encoded, forKey: prevSettingsKeyName)
+        } else {
+            DDLogInfo("Failed to save \(cached) to \(prevSettingsKeyName)")
+        }
+    }
     
     private static var userDefaults: UserDefaults = initUserDefaults()
     

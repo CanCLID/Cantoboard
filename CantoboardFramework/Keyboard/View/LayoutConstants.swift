@@ -906,6 +906,7 @@ extension LayoutConstants {
         switch keyCap {
         case .returnKey(.emergencyCall) where idiom == .phone: return 12
         case .keyboardType(.symbolic) where idiom == .phone, .keyboardType(.alphabetic) where idiom == .phone: return 14
+        case .keyboardType(.numeric) where idiom == .pad(.padShort), .keyboardType(.alphabetic) where idiom == .pad(.padShort): return 20
         case .keyboardType(.emojis): return 22
         case .character(".com", _, _),
              .jyutPing10Keys,
@@ -918,7 +919,8 @@ extension LayoutConstants {
              .keypadRimeDelimiter,
              .selectRomanization: return 16
         case .returnKey, "\t", .shift, .nextKeyboard, .dismissKeyboard: return 18
-        case .cangjie(_, let hints, _, _) where hints != nil: return 20
+        case .combo: return 18
+        case .cangjie(_, _, _, .cangjieRoot): return 20
         case .backspace: return 20
         case .currency where idiom.isPad: return 20
         case .character(let c, _, _), .contextual(.character(let c)):

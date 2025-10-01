@@ -70,7 +70,7 @@ class StatusMenu: UIView {
     
     private static func createLabel(keyCap: KeyCap) -> UILabel {
         let label = UILabel()
-        label.text = " \(keyCap.buttonText ?? "") "
+        label.attributedText = " \(keyCap.buttonText ?? "") ".toHKAttributedString
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         label.layer.cornerRadius = Self.cornerRadius

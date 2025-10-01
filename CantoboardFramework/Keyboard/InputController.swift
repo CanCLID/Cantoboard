@@ -462,7 +462,6 @@ class InputController: NSObject {
                 }
             }
         case .emoji(let e):
-            FeedbackProvider.play(keyboardAction: action)
             if !insertComposingText(appendBy: e, shouldDisableSmartSpace: true) {
                 textDocumentProxy.insertText(e)
             }
@@ -617,7 +616,7 @@ class InputController: NSObject {
         let activeSchema = state.activeSchema
         let is10Keys = activeSchema == .jyutping10keys && state.inputMode != .english
         keyboardViewController?.hasFilterBar = is10Keys && state.keyboardType != .emojis
-        keyboardViewController?.hasCompositionView = (isImmediateMode || activeSchema.isCangjieFamily && state.inputMode == .mixed)
+        keyboardViewController?.hasCompositionView = (isImmediateMode || activeSchema.isCangjieFamily && state.inputMode != .english)
         keyboardViewController?.hasCompositionResetButton = isImmediateMode && state.isComposing
     }
     

@@ -225,7 +225,6 @@ open class KeyboardViewController: UIInputViewController {
         
         super.viewDidLoad()
         
-        Settings.hasFullAccess = hasFullAccess
         view.translatesAutoresizingMaskIntoConstraints = false
         createKeyboardViewPlaceholder()
         
@@ -499,15 +498,16 @@ open class KeyboardViewController: UIInputViewController {
         let logView = UITextView()
         logView.frame = view.bounds
         logView.isEditable = false
-        logView.text = logs.joined()
+        logView.attributedText = logs.joined().toHKAttributedString
         
         view.addSubview(logView)
         self.logView = logView
     }
     
     private func reloadSettings() {
-        let prevSettings = Settings.cached
+        let prevSettings = Settings.prev
         let settings = Settings.reload()
+        Settings.savePrev()
         
         DDLogInfo("Reloaded Settings. prevSettings: \(prevSettings) newSettings: \(settings)")
         

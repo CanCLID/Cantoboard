@@ -43,16 +43,19 @@ internal extension UIView {
     }
     
     private func setupFontAndTextLayerSize(textLayer: CATextLayer, superlayerBounds: CGRect, minHeight: CGFloat = 10) -> CGSize {
-        guard let text = textLayer.string as? String else { return .zero }
+        guard let attributedString = textLayer.string as? NSAttributedString else { return .zero }
         // let wightAdjustmentRatio: CGFloat = UIScreen.main.bounds.size.isPortrait && bounds ? 1 : 1.25
         var height = superlayerBounds.height * KeyHintLayer.recommendedHeightRatio // * wightAdjustmentRatio
         height = max(height, minHeight)
         
-        let hasFullWidthChar = text.contains(where: {$0.isChineseChar})
+        let hasFullWidthChar = attributedString.string.contains(where: { $0.isChineseChar })
         let fullWidthMultipler = hasFullWidthChar ? 0.8 : 1
         
-        textLayer.fontSize = KeyHintLayer.fontSizePerHeight * height * fullWidthMultipler
-        return text.size(withFont: UIFont.systemFont(ofSize: textLayer.fontSize)).with(newWidth: superlayerBounds.width)
+        let font = UIFont.systemFont(ofSize: KeyHintLayer.fontSizePerHeight * height * fullWidthMultipler)
+        let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
+        mutableAttributedString.addAttribute(.font, value: font, range: NSMakeRange(0, attributedString.length))
+        textLayer.string = mutableAttributedString
+        return attributedString.string.size(withFont: font).with(newWidth: superlayerBounds.width)
     }
     
     func layout(textLayer: CATextLayer, centeredWithYOffset yOffset: CGFloat, height: CGFloat) {
