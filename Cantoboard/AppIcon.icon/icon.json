@@ -1,0 +1,64 @@
+{
+  "fill" : "system-dark",
+  "groups" : [
+    {
+      "blend-mode" : "normal",
+      "blur-material" : 1,
+      "layers" : [
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "shark.svg",
+          "name" : "shark"
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : {
+            "solid" : "srgb:0.00000,0.00000,0.00000,1.00000"
+          },
+          "glass" : true,
+          "image-name" : "jyut.svg",
+          "name" : "jyut",
+          "opacity" : 0.85
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : "none",
+          "glass" : true,
+          "image-name" : "frame.png",
+          "name" : "frame",
+          "opacity-specializations" : [
+            {
+              "value" : 0.925
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.65
+            }
+          ]
+        },
+        {
+          "glass" : true,
+          "image-name" : "bg.svg",
+          "name" : "bg"
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.25
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
