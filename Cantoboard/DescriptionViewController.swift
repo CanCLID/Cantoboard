@@ -30,7 +30,12 @@ class DescriptionViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.attributedText = option.title.toHKAttributedString
         titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
+        let titleButtonItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26, *) {
+            // Remove glass effect from the title
+            titleButtonItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleButtonItem
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissDescription))
         view.backgroundColor = .systemBackground
         
