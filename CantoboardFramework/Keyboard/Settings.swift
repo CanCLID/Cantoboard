@@ -192,6 +192,13 @@ public struct Settings: Codable, Equatable {
     public var quick3CandidateMode: Quick3CandidateMode
     public var quick3FixedOrderNumPopularCandidates: UInt8
 
+    public var shouldUseLiquidGlassTheme: Bool {
+        if #available(iOS 26, *) {
+            return true
+        }
+        return false
+    }
+
     public init() {
         isMixedModeEnabled = Self.defaultMixedModeEnabled
         isAutoCapEnabled = Self.defaultAutoCapEnabled

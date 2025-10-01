@@ -12,7 +12,7 @@ class StatusMenu: UIView {
     private static let labelInset: CGFloat = 2
     
     static let xInset: CGFloat = 5
-    static let cornerRadius: CGFloat = 5
+    static let cornerRadius: CGFloat = LayoutConstants.commonViewCornerRadius
     static let separatorWidth: CGFloat = 1
     static let fontSizeAtUnitHeight: CGFloat = 15
     static let unitHeight: CGFloat = 45
@@ -44,10 +44,12 @@ class StatusMenu: UIView {
         backgroundColor = UIColor.tertiarySystemBackground
         layer.cornerRadius = Self.cornerRadius
         
-        layer.shadowRadius = 15
-        layer.shadowOpacity = 1
-        layer.shadowOffset = CGSize(width: 10, height: 10)
-        layer.shadowColor = CGColor(gray: 0, alpha: 1)
+        if !Settings.cached.shouldUseLiquidGlassTheme {
+            layer.shadowRadius = 15
+            layer.shadowOpacity = 1
+            layer.shadowOffset = CGSize(width: 10, height: 10)
+            layer.shadowColor = CGColor(gray: 0, alpha: 1)
+        }
         
         itemLabelInRows.first?.first?.layer.maskedCorners = []
         itemLabelInRows.first?.last?.layer.maskedCorners = []
