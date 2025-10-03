@@ -15,19 +15,19 @@ class AboutViewController: UIViewController, UITableViewDelegate, UITableViewDat
             (CellImage.sourceCode, LocalizedStrings.about_upstreamSourceCode, "https://github.com/Cantoboard/Cantoboard"),
         ],
         [
-            (CellImage.repository, "Rime Input Method Engine", "https://github.com/rime/librime"),
-            (CellImage.repository, "Rime Cantonese Input Schema", "https://github.com/rime/rime-cantonese"),
+            (CellImage.repository, "Rime Input Method Engine 中州韻輸入法引擎 (librime)", "https://github.com/rime/librime"),
+            (CellImage.repository, "Rime 粵語拼音方案 (rime-cantonese)", "https://github.com/rime/rime-cantonese"),
             (CellImage.repository, "Rime 倉頡三代", "https://github.com/Arthurmcarthur/Cangjie3-Plus"),
             (CellImage.repository, "Rime 倉頡五代", "https://github.com/Jackchows/Cangjie5"),
             (CellImage.repository, "Rime 速成", "https://github.com/rime/rime-quick"),
             (CellImage.repository, "Rime 筆劃", "https://github.com/rime/rime-stroke"),
-            (CellImage.repository, "Open Chinese Convert (OpenCC)", "https://github.com/BYVoid/OpenCC"),
+            (CellImage.repository, "Open Chinese Convert 開放中文轉換 (OpenCC)", "https://github.com/BYVoid/OpenCC"),
             (CellImage.repository, "ISEmojiView", "https://github.com/isaced/ISEmojiView"),
         ],
         [
             (CellImage.telegram, LocalizedStrings.about_telegram, "https://t.me/rime_cantonese"),
             (CellImage.email, LocalizedStrings.about_email, "mailto:support@jyutping.org"),
-            (CellImage.rate, LocalizedStrings.about_appStore, "https://apps.apple.com/us/app/cantoboard-智能廣東話中文輸入法鍵盤/id6752963850"),
+            (CellImage.rate, LocalizedStrings.about_appStore, "https://apps.apple.com/app/id6752963850"),
             (CellImage.team, LocalizedStrings.about_joinUs, "https://github.com/CanCLID"),
         ],
     ]

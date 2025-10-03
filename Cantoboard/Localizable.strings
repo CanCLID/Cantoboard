@@ -147,8 +147,8 @@ vxq: 撳一下 v/x/q 輸入 1/2/3 聲；
 "onboarding.2.content" = "唔識用粵拼打某個字？長撳 r 揀其他輸入法打字反查，粵拼就會喺候選詞上面顯示。";
 "onboarding.3.heading" = "揾唔到候選字？";
 "onboarding.3.content" = "同 iOS 內置嘅中文輸入法一樣，Cantoboard 可以按粵拼／部首／筆畫排列候選字。";
-"onboarding.4.heading" = "一Ｑ清枱";
-"onboarding.4.content" = "三心兩意，想由頭打過？唔使撳實 backspace 慢慢等啲字剷晒㗎！只要喺個 backspace 向左掃一下，就可以剷晒啱啱打過嘅字詞。";
+"onboarding.4.heading" = "一「竅」清枱";
+"onboarding.4.content" = "三心兩意，想由頭打過？唔使撳實 backspace 慢慢等啲字剷晒㗎！只要喺個 backspace 向左掃一下，就可以剷走晒成個輸入碼。";
 "onboarding.5.heading" = "仲有一步⋯⋯";
 "onboarding.5.content" = "要開始用 Cantoboard，最後一步就係去程式設定撳「鍵盤」→「Cantoboard」同埋「允許全權取用」→「確定」。";
 "onboarding.5.footnote" = "「允許全權取用」係選擇性項目，但由於 iOS 系統限制，諸如震動之類嘅功能要開咗先用得到。本程式唔會用到網絡，因此亦冇可能收集到任何資料，包括你所打嘅文字。程式嘅原始碼可以喺 GitHub 睇到。";
