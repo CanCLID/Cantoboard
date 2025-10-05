@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -415,7 +415,7 @@
 		799F2E7F25F46BC600C53416 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		799F2E8D25F46BEF00C53416 /* CantoboardExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CantoboardExtension.entitlements; sourceTree = "<group>"; };
 		79A2D07F2661FD0C00F2EB19 /* Guide */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Guide; sourceTree = "<group>"; };
-		79B05DB22712697300CF07D3 /* Rime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Rime.xcframework; path = RimeFramework/Rime.xcframework; sourceTree = "<group>"; };
+		79B05DB22712697300CF07D3 /* Rime.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:MHSSG9ANTN:Ching Kit Kwan"; lastKnownFileType = wrapper.xcframework; name = Rime.xcframework; path = RimeFramework/Rime.xcframework; sourceTree = "<group>"; };
 		79B23737267832BD009FF854 /* KeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadView.swift; sourceTree = "<group>"; };
 		79B2D02027A90EC300E51CEF /* dynamic_bitset.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dynamic_bitset.hpp; sourceTree = "<group>"; };
 		79B9B57325F3496800238E80 /* CantoboardFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CantoboardFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
