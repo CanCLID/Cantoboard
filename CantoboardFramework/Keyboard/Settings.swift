@@ -127,15 +127,15 @@ public struct Settings: Codable, Equatable {
     private static let prevSettingsKeyName = "prevSettings"
     private static let settingsKeyName = "Settings"
     private static let defaultMixedModeEnabled: Bool = true
-    private static let defaultAutoCapEnabled: Bool = true
+    private static let defaultAutoCapEnabled: Bool = false
+    private static let defaultEnglishAutoCorrectEnabled: Bool = false
     private static let defaultSmartEnglishSpaceEnabled: Bool = true
-    private static let defaultSmartFullStopEnabled: Bool = true
     private static let defaultCandidateFontSize: CandidateFontSize = .normal
     private static let defaultCandidateSelectMode: CandidateSelectMode = .expandDownward
     private static let defaultSymbolShape: SymbolShape = .smart
     private static let defaultSmartSymbolShapeDefault: SymbolShape = .full
     private static let defaultSpaceAction: SpaceAction = .insertCandidate
-    private static let defaultToneInputMode: ToneInputMode = .longPress
+    private static let defaultToneInputMode: ToneInputMode = .vxq
     private static let defaultRimeSettings: RimeSettings = RimeSettings()
     private static let defaultEnglishLocale: EnglishLocale = .us
     private static let defaultShowRomanizationMode: ShowRomanizationMode = .onlyInNonCantoneseMode
@@ -152,7 +152,7 @@ public struct Settings: Codable, Equatable {
     private static let defaultPredictiveTextOffensiveWord: Bool = false
     private static let defaultFullPadCandidateBar: Bool = true
     private static let defaultPadLeftSysKeyAsKeyboardType: Bool = false
-    private static let defaultShowBottomLeftSwitchLangButton: Bool = false
+    private static let defaultShowBottomLeftSwitchLangButton: Bool = true
     private static let defaultShowEmojiKey: Bool = true
     private static let defaultCangjieVersion: CangjieVersion = .cangjie3
     private static let defaultCangjieKeyCapMode: CangjieKeyCapMode = .cangjieRoot
@@ -161,8 +161,8 @@ public struct Settings: Codable, Equatable {
 
     public var isMixedModeEnabled: Bool
     public var isAutoCapEnabled: Bool
+    public var isEnglishAutoCorrectEnabled: Bool
     public var isSmartEnglishSpaceEnabled: Bool
-    public var isSmartFullStopEnabled: Bool
     public var candidateFontSize: CandidateFontSize
     public var candidateSelectMode: CandidateSelectMode
     public var symbolShape: SymbolShape
@@ -202,8 +202,8 @@ public struct Settings: Codable, Equatable {
     public init() {
         isMixedModeEnabled = Self.defaultMixedModeEnabled
         isAutoCapEnabled = Self.defaultAutoCapEnabled
+        isEnglishAutoCorrectEnabled = Self.defaultEnglishAutoCorrectEnabled
         isSmartEnglishSpaceEnabled = Self.defaultSmartEnglishSpaceEnabled
-        isSmartFullStopEnabled = Self.defaultSmartFullStopEnabled
         candidateFontSize = Self.defaultCandidateFontSize
         candidateSelectMode = Self.defaultCandidateSelectMode
         symbolShape = Self.defaultSymbolShape
@@ -238,7 +238,7 @@ public struct Settings: Codable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.isMixedModeEnabled = try container.decodeIfPresent(Bool.self, forKey: .isMixedModeEnabled) ?? Settings.defaultMixedModeEnabled
         self.isAutoCapEnabled = try container.decodeIfPresent(Bool.self, forKey: .isAutoCapEnabled) ?? Settings.defaultAutoCapEnabled
-        self.isSmartFullStopEnabled = try container.decodeIfPresent(Bool.self, forKey: .isSmartFullStopEnabled) ?? Settings.defaultSmartFullStopEnabled
+        self.isEnglishAutoCorrectEnabled = try container.decodeIfPresent(Bool.self, forKey: .isEnglishAutoCorrectEnabled) ?? Settings.defaultEnglishAutoCorrectEnabled
         self.isSmartEnglishSpaceEnabled = try container.decodeIfPresent(Bool.self, forKey: .isSmartEnglishSpaceEnabled) ?? Settings.defaultSmartEnglishSpaceEnabled
         self.candidateFontSize = try container.decodeIfPresent(CandidateFontSize.self, forKey: .candidateFontSize) ?? Settings.defaultCandidateFontSize
         self.candidateSelectMode = try container.decodeIfPresent(CandidateSelectMode.self, forKey: .candidateSelectMode) ?? Settings.defaultCandidateSelectMode
@@ -331,14 +331,17 @@ public struct Settings: Codable, Equatable {
     private static var userDefaults: UserDefaults = initUserDefaults()
     
     private static func initUserDefaults() -> UserDefaults {
-        let suiteName = "group.org.jyutping.cantoboard"
-        let appGroupDefaults = UserDefaults(suiteName: suiteName)
-        if let appGroupDefaults = appGroupDefaults {
-            DDLogInfo("Using UserDefaults \(suiteName).")
-            return appGroupDefaults
-        } else {
-            DDLogInfo("Cannot open app group UserDefaults. Falling back to UserDefaults.standard.")
-            return UserDefaults.standard
+        let configuredSuiteName = Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
+        let candidateSuiteNames = [configuredSuiteName, "group.com.laubonghaudoi.cantoboard", "group.org.jyutping.cantoboard"].compactMap { $0 }
+
+        for suiteName in candidateSuiteNames {
+            if let appGroupDefaults = UserDefaults(suiteName: suiteName) {
+                DDLogInfo("Using UserDefaults \(suiteName).")
+                return appGroupDefaults
+            }
         }
+
+        DDLogInfo("Cannot open app group UserDefaults. Falling back to UserDefaults.standard.")
+        return UserDefaults.standard
     }
 }

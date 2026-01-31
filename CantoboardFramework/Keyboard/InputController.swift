@@ -266,8 +266,14 @@ class InputController: NSObject {
             }
         default:
             if state.inputMode == .english {
-                // Autocorrect
-                candidateSelected(choice: [0, 0], enableSmartSpace: true)
+                if shouldApplyEnglishAutoCorrect(), hasCandidate {
+                    // Autocorrect
+                    candidateSelected(choice: [0, 0], enableSmartSpace: true)
+                } else if !insertComposingText() {
+                    if !handleAutoSpace() {
+                        textDocumentProxy.insertText(" ")
+                    }
+                }
             } else if !insertComposingText() {
                 if !handleAutoSpace() {
                     textDocumentProxy.insertText(" ")
@@ -626,6 +632,14 @@ class InputController: NSObject {
         // Finding: documentContextBeforeInput might not contain the full url.
         return textFieldType == UIKeyboardType.webSearch
     }
+
+    func shouldApplyEnglishAutoCorrect() -> Bool {
+        guard Settings.cached.isEnglishAutoCorrectEnabled else { return false }
+        if textDocumentProxy?.autocorrectionType == .some(.no) {
+            return false
+        }
+        return true
+    }
     
     private func shouldApplyAutoCap() -> Bool {
         guard let textDocumentProxy = textDocumentProxy else { return false }
@@ -883,22 +897,8 @@ class InputController: NSObject {
         guard let textDocumentProxy = textDocumentProxy else { return false }
         
         // DDLogInfo("handleAutoSpace() hasInsertedAutoSpace \(hasInsertedAutoSpace) isLastInsertedTextFromCandidate \(isLastInsertedTextFromCandidate)")
-        let last2CharsInDoc = documentContextBeforeInput.suffix(2)
         if hasInsertedAutoSpace, case .selectCandidate = lastKey {
             // Mimic iOS stock behaviour. Swallow the space tap.
-            return true
-        } else if (hasInsertedAutoSpace || lastKey?.isSpace ?? false) &&
-           Settings.cached.isSmartFullStopEnabled &&
-           (last2CharsInDoc.first ?? " ").couldBeFollowedBySmartSpace && last2CharsInDoc.last?.isWhitespace ?? false {
-            // Translate double space tap into ". "
-            textDocumentProxy.deleteBackward()
-            if state.keyboardContextualType.halfWidthSymbol {
-                textDocumentProxy.insertText(". ")
-                hasInsertedAutoSpace = true
-            } else {
-                textDocumentProxy.insertText("。")
-                hasInsertedAutoSpace = false
-            }
             return true
         }
         return false

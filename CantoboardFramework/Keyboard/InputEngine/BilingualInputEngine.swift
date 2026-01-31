@@ -77,7 +77,10 @@ class BilingualInputEngine: InputEngine {
             }
             englishInputEngine.textBeforeInput = inputController?.textDocumentProxy?.documentContextBeforeInput
             englishInputEngine.textAfterInput = inputController?.textDocumentProxy?.documentContextAfterInput
-            englishInputEngine.disableTextOverride = !Settings.cached.isAutoCapEnabled || SessionState.main.lastInputMode == .chinese
+            let shouldApplyAutoCorrect = inputController?.shouldApplyEnglishAutoCorrect() ?? Settings.cached.isEnglishAutoCorrectEnabled
+            englishInputEngine.disableTextOverride = !shouldApplyAutoCorrect ||
+                !Settings.cached.isAutoCapEnabled ||
+                SessionState.main.lastInputMode == .chinese
             queue.async(group: group) {
                 updateEnglishEngineState = self.englishInputEngine.processChar(char)
             }

@@ -194,8 +194,6 @@ extension Settings {
                    LocalizedStrings.mixedMode_description, "Guide1-2"),
             isPad ? nil : Switch(LocalizedStrings.longPressSymbolKeys, \.isLongPressSymbolKeysEnabled,
                                  LocalizedStrings.longPressSymbolKeys_description),
-            Switch(LocalizedStrings.smartFullStop, \.isSmartFullStopEnabled,
-                   LocalizedStrings.smartFullStop_description, "Guide8-1"),
             Switch(LocalizedStrings.audioFeedback, \.isAudioFeedbackEnabled),
             isPad ? nil : Switch(LocalizedStrings.tapHapticFeedback, \.isTapHapticFeedbackEnabled),
             Segment(LocalizedStrings.candidateFontSize, \.candidateFontSize, [
@@ -314,6 +312,8 @@ extension Settings {
                 LocalizedStrings.englishInputSettings,
                 [
                     Switch(LocalizedStrings.autoCap, \.isAutoCapEnabled),
+                    Switch(LocalizedStrings.englishAutoCorrect, \.isEnglishAutoCorrectEnabled,
+                           LocalizedStrings.englishAutoCorrect_description),
                     Switch(LocalizedStrings.shouldShowEnglishExactMatch, \.shouldShowEnglishExactMatch),
                     Segment(LocalizedStrings.englishLocale, \.englishLocale, [
                             LocalizedStrings.englishLocale_au: .au,

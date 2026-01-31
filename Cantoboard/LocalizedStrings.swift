@@ -25,8 +25,6 @@ class LocalizedStrings {
     static let numKeyRow = localizedString("inputMethodSettings.numKeyRow")
     static let longPressSymbolKeys = localizedString("inputMethodSettings.longPressSymbolKeys")
     static let longPressSymbolKeys_description = localizedString("inputMethodSettings.longPressSymbolKeys.description")
-    static let smartFullStop = localizedString("inputMethodSettings.smartFullStop")
-    static let smartFullStop_description = localizedString("inputMethodSettings.smartFullStop.description")
     static let audioFeedback = localizedString("inputMethodSettings.audioFeedback")
     static let tapHapticFeedback = localizedString("inputMethodSettings.tapHapticFeedback")
     static let candidateFontSize = localizedString("inputMethodSettings.candidateFontSize")
@@ -107,6 +105,8 @@ class LocalizedStrings {
     
     static let englishInputSettings = localizedString("englishInputSettings")
     static let autoCap = localizedString("englishInputSettings.autoCap")
+    static let englishAutoCorrect = localizedString("englishInputSettings.autoCorrect")
+    static let englishAutoCorrect_description = localizedString("englishInputSettings.autoCorrect.description")
     static let shouldShowEnglishExactMatch = localizedString("englishInputSettings.shouldShowEnglishExactMatch")
     static let englishLocale = localizedString("englishInputSettings.englishLocale")
     static let englishLocale_au = localizedString("englishInputSettings.englishLocale.au")
