@@ -78,7 +78,7 @@ extension RimeApi {
         let userDataPath = DataFileManager.rimeUserDirectory
         
         if !DataFileManager.hasInstalled {
-            fatalError("Data files not installed.")
+            DDLogError("Data files not installed - keyboard functionality will be limited")
         }
         
         // Generate schema patch.

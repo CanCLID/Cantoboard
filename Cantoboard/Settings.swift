@@ -117,7 +117,7 @@ private class Segment<T: Equatable>: Option {
         self.controller = controller
         control = UISegmentedControl(items: options.map { $0.key })
         control.setTitleTextAttributes(String.HKAttribute, for: .normal)
-        control.selectedSegmentIndex = options.firstIndex(where: { $1 == value })!
+        control.selectedSegmentIndex = options.firstIndex(where: { $1 == value }) ?? 0
         control.addTarget(self, action: #selector(updateSettings), for: .valueChanged)
         return makeCell(with: control)
     }
