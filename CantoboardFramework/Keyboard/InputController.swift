@@ -899,7 +899,7 @@ class InputController: NSObject {
     }
     
     private func handleAutoSpace() -> Bool {
-        guard let textDocumentProxy = textDocumentProxy else { return false }
+        guard textDocumentProxy != nil else { return false }
         
         // DDLogInfo("handleAutoSpace() hasInsertedAutoSpace \(hasInsertedAutoSpace) isLastInsertedTextFromCandidate \(isLastInsertedTextFromCandidate)")
         if hasInsertedAutoSpace, case .selectCandidate = lastKey {
