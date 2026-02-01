@@ -23,6 +23,14 @@ class DescriptionViewController: UIViewController {
         self.init()
         self.option = option
     }
+    
+    deinit {
+        // Clean up player resources
+        if let player = (children.first as? AVPlayerViewController)?.player {
+            player.pause()
+        }
+        playerLooper = nil
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,8 +47,8 @@ class DescriptionViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissDescription))
         view.backgroundColor = .systemBackground
         
-        if let videoUrl = option.videoUrl {
-            let videoUrl = Bundle.main.url(forResource: "Guide/" + videoUrl, withExtension: "mp4")!
+        if let videoUrlName = option.videoUrl,
+           let videoUrl = Bundle.main.url(forResource: "Guide/" + videoUrlName, withExtension: "mp4") {
             
             let playerController = AVPlayerViewController()
             let playerItem = AVPlayerItem(url: videoUrl)

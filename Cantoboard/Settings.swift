@@ -65,7 +65,7 @@ private class Switch: Option {
     var key: WritableKeyPath<Settings, Bool>
     var value: Bool
     
-    private var controller: MainViewController!
+    private weak var controller: MainViewController?
     private var control: UISwitch!
     
     init(_ title: String, _ key: WritableKeyPath<Settings, Bool>, _ description: String? = nil, _ videoUrl: String? = nil) {
@@ -87,6 +87,7 @@ private class Switch: Option {
     @objc func updateSettings() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         value = control.isOn
+        guard let controller = controller else { return }
         controller.settings[keyPath: key] = value
         controller.view.endEditing(true)
         Settings.save(controller.settings)
@@ -101,7 +102,7 @@ private class Segment<T: Equatable>: Option {
     var value: T
     var options: KeyValuePairs<String, T>
     
-    private var controller: MainViewController!
+    private weak var controller: MainViewController?
     private var control: UISegmentedControl!
     
     init(_ title: String, _ key: WritableKeyPath<Settings, T>, _ options: KeyValuePairs<String, T>, _ description: String? = nil, _ videoUrl: String? = nil) {
@@ -125,6 +126,7 @@ private class Segment<T: Equatable>: Option {
     @objc func updateSettings() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         value = options[control.selectedSegmentIndex].value
+        guard let controller = controller else { return }
         controller.settings[keyPath: key] = value
         controller.view.endEditing(true)
         Settings.save(controller.settings)
@@ -138,7 +140,7 @@ private class IntStepper<T: BinaryInteger>: Option {
     var key: WritableKeyPath<Settings, T>
     var minimumValue, value, maximumValue, stepValue: T
     
-    private var controller: MainViewController!
+    private weak var controller: MainViewController?
     private var control: UIStepper!
     private var valueLabel: UILabel!
     
@@ -175,6 +177,7 @@ private class IntStepper<T: BinaryInteger>: Option {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         valueLabel.attributedText = String(T(control.value)).toHKAttributedString
         value = T(control.value)
+        guard let controller = controller else { return }
         controller.settings[keyPath: key] = value
         controller.view.endEditing(true)
         Settings.save(controller.settings)
