@@ -365,8 +365,7 @@ class CandidatePaneView: UIControl {
     }
     
     override func didMoveToSuperview() {
-        self.needsUpdateConstraints()
-        self.updateConstraints() // TODO revisit
+        setNeedsUpdateConstraints()
     }
     
     var rowHeight: CGFloat {

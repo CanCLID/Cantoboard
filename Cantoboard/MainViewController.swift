@@ -27,21 +27,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         title = "Cantoboard"
-        navigationController?.navigationBar.largeTitleTextAttributes = String.HKAttribute
-        navigationController?.navigationBar.titleTextAttributes = String.HKAttribute
-        tableView = UITableView(frame: view.frame, style: .grouped)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        configureNavigationBarWithHKAttributes()
+        tableView = createFullScreenTableView(delegate: self, dataSource: self)
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 48
-        tableView.delegate = self
-        tableView.dataSource = self
-        view.addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
         
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willEnterForegroundNotification, object: nil)
         
