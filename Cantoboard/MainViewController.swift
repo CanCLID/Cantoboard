@@ -31,6 +31,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         navigationController?.navigationBar.titleTextAttributes = String.HKAttribute
         tableView = UITableView(frame: view.frame, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.estimatedSectionHeaderHeight = 48
         tableView.delegate = self
         tableView.dataSource = self
         view.addSubview(tableView)
@@ -93,6 +95,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         default: return sections[section - 3].header
         }
     }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section >= 3,
+              let title = self.tableView(tableView, titleForHeaderInSection: section) else { return nil }
+        return makeSettingsHeaderView(title: title)
+    }
     
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
@@ -126,6 +134,33 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         (view as? UITableViewHeaderFooterView)?.textLabel?.attributedText = self.tableView(tableView, titleForFooterInSection: section)?.toHKAttributedString
+    }
+
+    private func makeSettingsHeaderView(title: String) -> UIView {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        headerView.layoutMargins = UIEdgeInsets(top: 8, left: 20, bottom: 10, right: 20)
+
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.adjustsFontForContentSizeCategory = true
+
+        var attributes = String.HKAttribute
+        let baseFont = UIFont.systemFont(ofSize: 24, weight: .semibold)
+        attributes[.font] = UIFontMetrics(forTextStyle: .title3).scaledFont(for: baseFont)
+        attributes[.foregroundColor] = UIColor.label
+        label.attributedText = NSAttributedString(string: title, attributes: attributes)
+
+        headerView.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: headerView.layoutMarginsGuide.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: headerView.layoutMarginsGuide.trailingAnchor),
+            label.topAnchor.constraint(equalTo: headerView.layoutMarginsGuide.topAnchor),
+            label.bottomAnchor.constraint(equalTo: headerView.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        return headerView
     }
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {

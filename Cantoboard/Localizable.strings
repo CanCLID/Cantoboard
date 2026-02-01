@@ -19,8 +19,8 @@
 "testKeyboard.placeholder" = "撳呢度打字，試下個鍵盤⋯⋯";
 
 "inputMethodSettings" = "輸入法設定";
-"inputMethodSettings.mixedMode" = "粵英混合輸入";
-"inputMethodSettings.mixedMode.description" = "熄咗呢個選項，打粵文嗰陣就唔會顯示英文候選詞。";
+"inputMethodSettings.mixedMode" = "顯示英文候選詞";
+"inputMethodSettings.mixedMode.description" = "關閉後鍵盤就唔會識別同顯示英文候選詞。";
 "inputMethodSettings.numKeyRow" = "數字鍵列";
 "inputMethodSettings.longPressSymbolKeys" = "長撳選擇符號或數字";
 "inputMethodSettings.longPressSymbolKeys.description" = "開咗呢個選項，就會多咗啲符號或者數字顯示喺每粒字母鍵嘅右上角，長撳可以輸入。";
@@ -98,7 +98,7 @@
 vxq: 撳一下 v/x/q 輸入 1/2/3 聲；
 　　 撳兩下 v/x/q 輸入 4/5/6 聲。
 長撳：長撳鍵盤中間嗰六粒掣選擇聲調。";
-"chineseInputSettings.enableHKCorrection" = "香港用字轉換";
+"chineseInputSettings.enableHKCorrection" = "轉換成香港字形（爲 → 為）";
 "chineseInputSettings.cangjieVersion" = "倉頡速成版本";
 "chineseInputSettings.cangjie3" = "三代";
 "chineseInputSettings.cangjie5" = "五代";
