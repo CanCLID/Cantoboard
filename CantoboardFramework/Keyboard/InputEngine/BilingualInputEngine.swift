@@ -11,11 +11,6 @@ import UIKit
 import CocoaLumberjackSwift
 
 class BilingualInputEngine: InputEngine {
-    private static let processCharQueue = DispatchQueue(
-        label: "org.jyutping.cantoboard.processcharqueue",
-        qos: .userInteractive,
-        attributes: .concurrent)
-    
     private let rimeInputEngine: RimeInputEngine
     private let englishInputEngine: EnglishInputEngine
     private weak var inputController: InputController?
@@ -67,24 +62,14 @@ class BilingualInputEngine: InputEngine {
     
     func processChar(_ char: Character) -> Bool {
         if char.isASCII {
-            let queue = Self.processCharQueue
-            let group = DispatchGroup()
-            
-            var updateEnglishEngineState = false, updateRimeEngineState = false
-            queue.async(group: group) {
-                updateRimeEngineState =
-                self.rimeInputEngine.processChar(char)
-            }
+            let updateRimeEngineState = rimeInputEngine.processChar(char)
             englishInputEngine.textBeforeInput = inputController?.textDocumentProxy?.documentContextBeforeInput
             englishInputEngine.textAfterInput = inputController?.textDocumentProxy?.documentContextAfterInput
             let shouldApplyAutoCorrect = inputController?.shouldApplyEnglishAutoCorrect() ?? Settings.cached.isEnglishAutoCorrectEnabled
             englishInputEngine.disableTextOverride = !shouldApplyAutoCorrect ||
                 !Settings.cached.isAutoCapEnabled ||
                 SessionState.main.lastInputMode == .chinese
-            queue.async(group: group) {
-                updateEnglishEngineState = self.englishInputEngine.processChar(char)
-            }
-            group.wait()
+            let updateEnglishEngineState = englishInputEngine.processChar(char)
             updateComposition()
             return updateEnglishEngineState || updateRimeEngineState
         } else {

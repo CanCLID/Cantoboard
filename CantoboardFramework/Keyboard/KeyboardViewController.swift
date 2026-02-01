@@ -45,6 +45,7 @@ open class KeyboardViewController: UIInputViewController {
     
     private let initStartTime: Date = Date()
     private var rimeCallbackToken: RimeApiListener.CallbackToken?
+    private var lastWindowSize: CGSize?
     
     public override init(nibName: String?, bundle: Bundle?) {
         instanceId = Self.count
@@ -457,7 +458,11 @@ open class KeyboardViewController: UIInputViewController {
 
         guard let hostWindow = view.window else { return }
         // Reset the size constraints to handle screen rotation.
-        refreshLayoutConstants()
+        let hostWindowSize = hostWindow.bounds.size
+        if lastWindowSize != hostWindowSize {
+            lastWindowSize = hostWindowSize
+            refreshLayoutConstants()
+        }
         
         let layoutConstants = self.layoutConstants.ref
         let hostWindowWidth = hostWindow.bounds.width
