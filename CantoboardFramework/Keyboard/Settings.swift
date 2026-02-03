@@ -332,7 +332,7 @@ public struct Settings: Codable, Equatable {
     
     private static func initUserDefaults() -> UserDefaults {
         let configuredSuiteName = Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
-        let candidateSuiteNames = [configuredSuiteName, "group.com.laubonghaudoi.cantoboard", "group.org.jyutping.cantoboard"].compactMap { $0 }
+        let candidateSuiteNames = [configuredSuiteName, "group.org.jyutping.cantoboard"].compactMap { $0 }
 
         for suiteName in candidateSuiteNames {
             if let appGroupDefaults = UserDefaults(suiteName: suiteName) {
